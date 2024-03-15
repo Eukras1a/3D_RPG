@@ -3,7 +3,11 @@ guid: 5abd7ddfb0a19c44b86f879367d42d0b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - dogPlayerPrefab: {fileID: 8401847423386628450, guid: 1fe791f63204d724382b7a0bd2dbff7a, type: 3}
+  - malePlayerPrefab: {fileID: 5228854843077438120, guid: 5ed987b93493caa44bcadc229fe93357, type: 3}
+  - femalePlayerPrefab: {fileID: 8580606244792721291, guid: 174cc4c4e5ac204429cc682c722b8e7c, type: 3}
+  - sceneFaderPrefab: {fileID: 4609627908859791615, guid: 9e28161159118d74896d9ab788ec0e6f, type: 3}
   executionOrder: -1100
   icon: {instanceID: 0}
   userData: 

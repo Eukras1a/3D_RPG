@@ -6,8 +6,11 @@ using UnityEngine.SceneManagement;
 public class SceneController : Singleton<SceneController>, IEndGameObserver
 {
     GameObject player;
-    public GameObject playerPrefab;
+    public GameObject dogPlayerPrefab;
+    public GameObject malePlayerPrefab;
+    public GameObject femalePlayerPrefab;
     public SceneFader sceneFaderPrefab;
+    GameObject instantiatePlayerPrefab;
     bool fadeFinished;
     float deadWait;
     bool isdeadWait;
@@ -15,6 +18,7 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
     {
         base.Awake();
         DontDestroyOnLoad(this);
+        instantiatePlayerPrefab = dogPlayerPrefab;
     }
     void Start()
     {
@@ -50,7 +54,7 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
         {
             yield return StartCoroutine(fade.FadeOut(2));
             yield return SceneManager.LoadSceneAsync(sceneName);
-            yield return Instantiate(playerPrefab, GetDestination(destinationTag).transform.position, GetDestination(destinationTag).transform.rotation);
+            yield return Instantiate(instantiatePlayerPrefab, GetDestination(destinationTag).transform.position, GetDestination(destinationTag).transform.rotation);
             SaveManager.Instance.LoadPlayerData();
             yield return StartCoroutine(fade.FadeIn(2));
             yield break;
@@ -72,7 +76,7 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
         {
             yield return StartCoroutine(fade.FadeOut(2));
             yield return SceneManager.LoadSceneAsync(scene);
-            yield return player = Instantiate(playerPrefab, GameManager.Instance.GetEntrance().position, GameManager.Instance.GetEntrance().rotation);
+            yield return player = Instantiate(instantiatePlayerPrefab, GameManager.Instance.GetEntrance().position, GameManager.Instance.GetEntrance().rotation);
 
             SaveManager.Instance.SavePlayerData();
             yield return StartCoroutine(fade.FadeIn(2));

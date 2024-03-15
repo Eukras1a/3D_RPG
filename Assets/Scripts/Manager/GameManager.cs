@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    public CharacterStates playerStates;
+    [HideInInspector] public CharacterStates playerStates;
     CinemachineFreeLook followCamera;
 
     List<IEndGameObserver> endGameObservers = new List<IEndGameObserver>();
@@ -23,8 +23,8 @@ public class GameManager : Singleton<GameManager>
     {
         playerStates = player;
         followCamera = FindObjectOfType<CinemachineFreeLook>();
-        followCamera.Follow = playerStates.transform.GetChild(2).transform;
-        followCamera.LookAt = playerStates.transform.GetChild(2).transform;
+        followCamera.Follow = playerStates.transform.GetChild(0).transform;
+        followCamera.LookAt = playerStates.transform.GetChild(0).transform;
     }
     public void AddObserver(IEndGameObserver observer)
     {
