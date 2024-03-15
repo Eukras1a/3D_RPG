@@ -102,7 +102,7 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
     {
         SceneFader fade = Instantiate(sceneFaderPrefab);
         yield return StartCoroutine(fade.FadeOut(2));
-        yield return SceneManager.LoadSceneAsync("Menu");
+        yield return SceneManager.LoadSceneAsync("0_Menu");
         yield return StartCoroutine(fade.FadeIn(2));
         yield break;
     }
@@ -113,7 +113,7 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
     public void LoadNewGameScene(int id)
     {
         SelectPlayerMode(id);
-        StartCoroutine(LoadScene("SampleScene"));
+        StartCoroutine(LoadScene("1_Forest"));
     }
     TransitionDestination GetDestination(TransitionDestination.DestinationTag destinationTag)
     {
