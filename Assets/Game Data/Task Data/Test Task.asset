@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2cca7ff28107f4c8ce94ad57f06fa2, type: 3}
+  m_Name: Test Task
+  m_EditorClassIdentifier: 
+  taskID: 01
+  taskName: "\u4EFB\u52A1\u6D4B\u8BD5"
+  taskDescription: "\u5E2E\u6211\u505A\u4EFB\u52A1"
+  isStarted: 0
+  isCompleted: 0
+  isFinished: 0
+  requireList:
+  - name: Mushroom
+    requireAmount: 3
+    currentAmount: 0
+  rewardList:
+  - itemData: {fileID: 11400000, guid: 3e133f3fcd295df42a4b71537bf9cf4f, type: 2}
+    amount: 1
+  - itemData: {fileID: 11400000, guid: 5b63899450de85e43be8d681dab045cd, type: 2}
+    amount: 1
+  - itemData: {fileID: 11400000, guid: 9ee636f8f1b121d4b879f11f94bc2d1f, type: 2}
+    amount: 1
+  - itemData: {fileID: 11400000, guid: 59b92e48e83136c4fb2c810218698998, type: 2}
+    amount: -3

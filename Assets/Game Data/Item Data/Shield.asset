@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 880efd94a5d002e4bb1b3291c2431cb5, type: 3}
+  m_Name: Shield
+  m_EditorClassIdentifier: 
+  itemType: 2
+  itemName: Shield
+  itemIcon: {fileID: 21300000, guid: b634c8a51d4a2d440b44719a9c1329ba, type: 3}
+  itemAmount: 1
+  stackable: 0
+  itemDescription: "\u4E00\u9762\u6728\u76FE"
+  equipmentPrefab: {fileID: 5605411980594798608, guid: 124776fe18474484393219b9de196f0b, type: 3}
+  weaponData: {fileID: 0}
+  shieldData: {fileID: 11400000, guid: 0728a930242c87d4281acf415c06b31d, type: 2}
+  animatorStates: 2
+  usableItemData: {fileID: 0}
+  overrideController: {fileID: 22100000, guid: 6a7fa3ce90abead48a00057d35e09579, type: 2}
