@@ -1,36 +1,71 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Playables;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    Button newGameBtn;
-    Button continueBtn;
-    Button quitBtn;
+    public Button newGameBtn;
+    public Button continueBtn;
+    public Button quitBtn;
+    public Button backBtn;
     PlayableDirector director;
+
+    [Header("Player Model")]
+    public GameObject malePlayerPrefab;
+    public GameObject femalePlayerPrefab;
+    public GameObject dogPlayerPrefab;
+    GameObject currentPlayer;
+    int playerID;
     void Awake()
     {
-        newGameBtn = transform.GetChild(1).GetComponent<Button>();
-        continueBtn = transform.GetChild(2).GetComponent<Button>();
-        quitBtn = transform.GetChild(3).GetComponent<Button>();
-
         director = FindObjectOfType<PlayableDirector>();
         director.stopped += NewGame;
-
-        newGameBtn.onClick.AddListener(PlayTimeline);
+        newGameBtn.onClick.AddListener(ChangePanel);
         continueBtn.onClick.AddListener(ContinueGame);
         quitBtn.onClick.AddListener(QuitGame);
+        backBtn.onClick.AddListener(BackToStart);
+        transform.GetChild(0).gameObject.SetActive(true);
+        transform.GetChild(1).gameObject.SetActive(false);
     }
-    void PlayTimeline()
+    private void Update()
     {
-        director.Play();
+        if (currentPlayer != null)
+        {
 
+        }
+    }
+    public void ShowSelectPlayer(string name)
+    {
+        currentPlayer = name switch
+        {
+            "MALE" => malePlayerPrefab,
+            "FEMALE" => femalePlayerPrefab,
+            "DOG" => dogPlayerPrefab,
+            _ => null
+        };
+    }
+    public void ChangePlayer(int id)
+    {
+        playerID = id;
+        director.Play();
+    }
+    void BackToStart()
+    {
+        currentPlayer = null;
+        transform.GetChild(0).gameObject.SetActive(true);
+        transform.GetChild(1).gameObject.SetActive(false);
+    }
+    void ChangePanel()
+    {
+        transform.GetChild(0).gameObject.SetActive(false);
+        transform.GetChild(1).gameObject.SetActive(true);
     }
     void NewGame(PlayableDirector pd)
     {
         PlayerPrefs.DeleteAll();
-        SceneController.Instance.LoadNewGameScene();
+        SceneController.Instance.LoadNewGameScene(playerID);
     }
     void ContinueGame()
     {

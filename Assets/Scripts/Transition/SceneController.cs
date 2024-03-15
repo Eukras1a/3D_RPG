@@ -34,6 +34,20 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
             deadWait -= Time.deltaTime;
         }
     }
+    void SelectPlayerMode(int id)
+    {
+        GameObject go = id switch
+        {
+            0 => malePlayerPrefab,
+            1 => femalePlayerPrefab,
+            2 => dogPlayerPrefab,
+            _ => null
+        };
+        if (go != null)
+        {
+            instantiatePlayerPrefab = go;
+        }
+    }
     public void TransitionToDestination(TransitionPoint transitionPoint)
     {
         switch (transitionPoint.transitionType)
@@ -96,8 +110,9 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
     {
         StartCoroutine(LoadMain());
     }
-    public void LoadNewGameScene()
+    public void LoadNewGameScene(int id)
     {
+        SelectPlayerMode(id);
         StartCoroutine(LoadScene("SampleScene"));
     }
     TransitionDestination GetDestination(TransitionDestination.DestinationTag destinationTag)
