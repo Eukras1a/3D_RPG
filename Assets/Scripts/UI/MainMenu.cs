@@ -1,6 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Playables;
 using UnityEngine.UI;
 
@@ -13,10 +12,10 @@ public class MainMenu : MonoBehaviour
     PlayableDirector director;
 
     [Header("Player Model")]
-    public GameObject malePlayerPrefab;
-    public GameObject femalePlayerPrefab;
-    public GameObject dogPlayerPrefab;
-    GameObject currentPlayer;
+    public GameObject malePlayerModel;
+    public GameObject femalePlayerModel;
+    public GameObject dogPlayerModel;
+    GameObject currentPlayerModel;
     int playerID;
     void Awake()
     {
@@ -28,23 +27,32 @@ public class MainMenu : MonoBehaviour
         backBtn.onClick.AddListener(BackToStart);
         transform.GetChild(0).gameObject.SetActive(true);
         transform.GetChild(1).gameObject.SetActive(false);
+        HideAllModel();
     }
     private void Update()
     {
-        if (currentPlayer != null)
+        if (currentPlayerModel != null)
         {
-
+            currentPlayerModel.SetActive(true);
+            currentPlayerModel.transform.Rotate(Vector3.up, 150 * Time.deltaTime);
         }
+    }
+    void HideAllModel()
+    {
+        malePlayerModel.SetActive(false);
+        femalePlayerModel.SetActive(false);
+        dogPlayerModel.SetActive(false);
     }
     public void ShowSelectPlayer(string name)
     {
-        currentPlayer = name switch
+        currentPlayerModel = name switch
         {
-            "MALE" => malePlayerPrefab,
-            "FEMALE" => femalePlayerPrefab,
-            "DOG" => dogPlayerPrefab,
+            "MALE" => malePlayerModel,
+            "FEMALE" => femalePlayerModel,
+            "DOG" => dogPlayerModel,
             _ => null
         };
+        HideAllModel();
     }
     public void ChangePlayer(int id)
     {
@@ -53,7 +61,7 @@ public class MainMenu : MonoBehaviour
     }
     void BackToStart()
     {
-        currentPlayer = null;
+        currentPlayerModel = null;
         transform.GetChild(0).gameObject.SetActive(true);
         transform.GetChild(1).gameObject.SetActive(false);
     }
