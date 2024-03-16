@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Attack", menuName = "AttackData/Data")]
+[CreateAssetMenu(fileName = "New Attack", menuName = "Data/AttackData")]
 public class AttackData_SO : ScriptableObject
 {
     public float attackRange;

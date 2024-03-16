@@ -7,7 +7,7 @@ public enum ItemType
     Armor
 }
 
-[CreateAssetMenu(fileName = "New Item", menuName = "Package/Item Data")]
+[CreateAssetMenu(fileName = "New Item", menuName = "Data/Package/Item Data")]
 
 public class ItemData_SO : ScriptableObject
 {

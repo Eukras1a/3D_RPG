@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Package", menuName = "Package/Package Data")]
+[CreateAssetMenu(fileName = "New Package", menuName = "Data/Package/Package Data")]
 public class PackageData_SO : ScriptableObject
 {
     public List<PackageItem> items = new List<PackageItem>();

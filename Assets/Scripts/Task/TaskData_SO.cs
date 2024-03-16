@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Task", menuName = "Task/Task Data")]
+[CreateAssetMenu(fileName = "New Task", menuName = "Data/Task Data")]
 public class TaskData_SO : ScriptableObject
 {
     [System.Serializable]

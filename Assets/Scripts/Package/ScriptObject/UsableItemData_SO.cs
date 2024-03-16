@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Usable Item", menuName = "Package/Usable Item Data")]
+[CreateAssetMenu(fileName = "Usable Item", menuName = "Data/Package/Usable Item Data")]
 public class UsableItemData_SO : ScriptableObject
 {
     public int healPoint;
