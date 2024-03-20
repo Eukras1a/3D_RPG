@@ -19,9 +19,12 @@ public class MouseManager : Singleton<MouseManager>
     void Update()
     {
         SetCursorTexture();
-        if (!InteractWithUI())
+        if (!GameManager.Instance.IsStopGame)
         {
-            MouseControl();
+            if (!InteractWithUI())
+            {
+                MouseControl();
+            }
         }
     }
     void SetCursorTexture()

@@ -5,6 +5,8 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     [HideInInspector] public CharacterStates playerStates;
+    [HideInInspector] public bool IsStopGame;
+
     CinemachineFreeLook followCamera;
 
     List<IEndGameObserver> endGameObservers = new List<IEndGameObserver>();

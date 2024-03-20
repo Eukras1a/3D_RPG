@@ -55,10 +55,14 @@ public class EscapeMenuUI : MonoBehaviour
         {
             if (menu == EscapeMenuState.Main)
             {
+                GameManager.Instance.IsStopGame = false;
+                Time.timeScale = 1;
                 ChangeMenuStates(EscapeMenuState.None);
             }
             else
             {
+                GameManager.Instance.IsStopGame = true;
+                Time.timeScale = 0;
                 ChangeMenuStates(EscapeMenuState.Main);
             }
         }
