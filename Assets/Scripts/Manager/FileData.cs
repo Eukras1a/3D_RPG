@@ -8,9 +8,9 @@ public class FileData
     public string fileName;
     public string createTime;
     public string lastScene;
+    public int playerPrefabID;
     public PlayerSceneLocation playerLocationOnSceneLoad;
     public CharacterData_SO playerData;
-    public List<Task> taskList = new List<Task>();
     public void SavePlayerTransformInfo(string sceneName, Transform t)
     {
         lastScene = sceneName;

@@ -13,12 +13,10 @@ public enum FileDataState
 public class SaveManager : Singleton<SaveManager>
 {
     const string filePath = "F:/SaveData/SAVEDATA.SD";
-    FileData currentFileData;
+    GameFileData gameFileData = new GameFileData();
     string currentSaveFileName;
     List<Task> taskList;
-    GameFileData gameFileData = new GameFileData();
-
-    int tempIndex;
+    int playerID;
     public string SaveScene
     {
         get
@@ -30,7 +28,7 @@ public class SaveManager : Singleton<SaveManager>
     {
         base.Awake();
         DontDestroyOnLoad(this);
-        LoadExistGameData();
+        LoadFileGameData();
     }
 
     void Update()
@@ -40,10 +38,6 @@ public class SaveManager : Singleton<SaveManager>
             SavePlayerData();
             Debug.Log("Saved.");
         }
-    }
-    public void ExitGame()
-    {
-        SceneController.Instance.LoadMainScene();
     }
     public void SavePlayerData()
     {
@@ -73,47 +67,106 @@ public class SaveManager : Singleton<SaveManager>
     }
     public void UpdateGameFileData()
     {
-        currentFileData = new FileData()
+        var tempFileData = new FileData()
         {
             fileName = currentSaveFileName,
             createTime = DateTime.Now.ToString(),
-            taskList = taskList,
+            playerPrefabID = playerID,
             playerData = GameManager.Instance.playerStates.characterData,
         };
-        currentFileData.SavePlayerTransformInfo(SceneManager.GetActiveScene().name, GameManager.Instance.playerStates.transform);
-        gameFileData.currentGameFile = currentSaveFileName;
-        gameFileData.gameFiles.Add(currentFileData);
+        tempFileData.SavePlayerTransformInfo(SceneManager.GetActiveScene().name, GameManager.Instance.playerStates.transform);
+        gameFileData.currentGameFile = tempFileData.fileName;
+        gameFileData.gameFiles.Add(tempFileData);
     }
     public void SaveGameData()
     {
         UpdateGameFileData();
+        DeleteEmptyOrRepeat();
+        InventoryManager.Instance.SaveData();
+        TaskManager.Instance.Save();
         string jsonData = JsonUtility.ToJson(gameFileData, true);
         File.WriteAllText(filePath, jsonData);
     }
-    void LoadExistGameData()
+    void LoadFileGameData()
     {
         if (File.Exists(filePath))
         {
             string data = File.ReadAllText(filePath);
-            gameFileData = JsonUtility.FromJson<GameFileData>(data);
+            JsonUtility.FromJsonOverwrite(data, gameFileData);
+            DeleteEmptyOrRepeat();
         }
+    }
+    public void LoadGameData(string name)
+    {
+        DeleteEmptyOrRepeat();
+        currentSaveFileName = name;
+        InventoryManager.Instance.LoadData();
+        //SceneController.Instance.LoadGame(CurrentFileData.playerPrefabID, CurrentFileData.playerLocationOnSceneLoad.position, CurrentFileData.playerLocationOnSceneLoad.rotation, CurrentFileData.lastScene);
     }
     public void DeleteData(string name)
     {
-        for (int i = 0; i < gameFileData.gameFiles.Count; i++)
+        if (currentSaveFileName == name)
+        {
+            currentSaveFileName = null;
+        }
+        for (int i = gameFileData.gameFiles.Count - 1; i >= 0; i--)
         {
             if (gameFileData.gameFiles[i].fileName == name)
             {
-                gameFileData.gameFiles.RemoveAt(i);
+                gameFileData.gameFiles.Remove(gameFileData.gameFiles[i]);
+                break;
             }
         }
+        SaveGameData();
+    }
+    void DeleteEmptyOrRepeat()
+    {
+        for (int i = gameFileData.gameFiles.Count - 1; i >= 0; i--)
+        {
+            if (gameFileData.gameFiles[i].fileName == null)
+            {
+                gameFileData.gameFiles.Remove(gameFileData.gameFiles[i]);
+                break;
+            }
+        }
+        for (int i = 0; i < gameFileData.gameFiles.Count; i++)
+        {
+            for (int j = gameFileData.gameFiles.Count - 1; j > i; j--)
+            {
+                if (gameFileData.gameFiles[j].fileName == gameFileData.gameFiles[i].fileName)
+                {
+                    gameFileData.gameFiles.Remove(gameFileData.gameFiles[j]);
+                }
+            }
+        }
+    }
+    bool RepeatFileData(string name)
+    {
+        foreach (var item in gameFileData.gameFiles)
+        {
+            if (item.fileName == name)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     #region Get/Set
     public void SaveFile(string name)
     {
-        currentSaveFileName = name;
-        SaveGameData();
+        if (RepeatFileData(name))
+        {
+            if (name != null)
+            {
+                currentSaveFileName = name;
+                SaveGameData();
+            }
+        }
+    }
+    public void RigisterPlayerID(int id)
+    {
+        playerID = id;
     }
     public void SaveTaskList(List<Task> list)
     {

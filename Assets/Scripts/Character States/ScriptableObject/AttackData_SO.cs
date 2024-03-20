@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Attack", menuName = "Data/AttackData")]
+[System.Serializable]
 public class AttackData_SO : ScriptableObject
 {
     public float attackRange;

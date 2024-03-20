@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+[System.Serializable]
 public class CharacterStates : MonoBehaviour
 {
     public event Action<int, int> UpdateHealthUIOnAttack;
@@ -21,6 +22,7 @@ public class CharacterStates : MonoBehaviour
     private int _denfence;
     private RuntimeAnimatorController baseAnimator;
 
+    [System.Serializable]
     public enum AnimatorStates
     {
         None,

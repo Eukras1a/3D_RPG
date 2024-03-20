@@ -21,7 +21,6 @@ public class EscapeMenuUI : MonoBehaviour
     public RectTransform dataListTransform;
 
     string currentSelectFile;
-    List<FileData> dataList;
 
     enum EscapeMenuState
     {
@@ -89,14 +88,15 @@ public class EscapeMenuUI : MonoBehaviour
     #region ÏìÓ¦ÊÂ¼þ
     void OnLoad()
     {
-
+        ChangeMenuStates(EscapeMenuState.None);
+        SaveManager.Instance.LoadGameData(currentSelectFile);
     }
     void OnDelete()
     {
         if (currentSelectFile != null)
         {
             SaveManager.Instance.DeleteData(currentSelectFile);
-            OnLoadSaveMenu();
+            ReadSavedFileData();
         }
     }
     void OnCreate()
@@ -120,10 +120,12 @@ public class EscapeMenuUI : MonoBehaviour
     }
     void OnExitGame()
     {
-        SaveManager.Instance.ExitGame();
+        GameManager.Instance.IsStopGame = false;
+        Time.timeScale = 1;
+        SceneController.Instance.LoadMainScene();
     }
     #endregion
-    public void RigistFile(string id)
+    public void RigisterFile(string id)
     {
         currentSelectFile = id;
     }
@@ -137,6 +139,8 @@ public class EscapeMenuUI : MonoBehaviour
         switch (state)
         {
             case EscapeMenuState.None:
+                GameManager.Instance.IsStopGame = false;
+                Time.timeScale = 1;
                 break;
             case EscapeMenuState.Main:
                 mainMenu.SetActive(true);
@@ -145,22 +149,24 @@ public class EscapeMenuUI : MonoBehaviour
                 saveMenu.SetActive(true);
                 break;
             case EscapeMenuState.Confirm:
-                Debug.Log("confirm");
                 confirmMenu.SetActive(true);
                 break;
         }
     }
     void ReadSavedFileData()
     {
-        dataList = SaveManager.Instance.GetSavedFileData();
         foreach (Transform t in dataListTransform)
         {
             Destroy(t.gameObject);
         }
-        foreach (var item in dataList)
+        if (SaveManager.Instance.GetSavedFileData().Count > 0)
         {
-            var newData = Instantiate(SaveButtonPrefab, dataListTransform);
-            newData.SetUpDataInfo(item.fileName, item.createTime);
+            foreach (var item in SaveManager.Instance.GetSavedFileData())
+            {
+                var newData = Instantiate(SaveButtonPrefab, dataListTransform);
+                newData.SetUpDataInfo(item.fileName, item.createTime);
+            }
         }
+
     }
 }

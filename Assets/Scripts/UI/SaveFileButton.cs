@@ -8,21 +8,27 @@ public class SaveFileButton : MonoBehaviour
     string id;
     public void SetUpDataInfo(string name, string time)
     {
-        id = name;
-        saveName.text = "NAME:" + name;
-        createTime.text = "TIME:" + time;
+        if (name != null)
+        {
+            id = name;
+            saveName.text = "NAME:" + name;
+            createTime.text = "TIME:" + time;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
     private void OnEnable()
     {
-        GetComponent<Button>().onClick.AddListener(OnLoadGame);
+        GetComponent<Button>().onClick.AddListener(OnRigisterFileData);
     }
     private void OnDisable()
     {
-        GetComponent<Button>().onClick.RemoveListener(OnLoadGame);
+        GetComponent<Button>().onClick.RemoveListener(OnRigisterFileData);
     }
-    private void OnLoadGame()
+    private void OnRigisterFileData()
     {
-        //TODO:Ìæ»»ÒÑÓÐ´æµµ
-        FindObjectOfType<EscapeMenuUI>().RigistFile(id);
+        FindObjectOfType<EscapeMenuUI>().RigisterFile(id);
     }
 }

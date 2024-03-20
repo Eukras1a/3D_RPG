@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Data", menuName = "Data/Character Data")]
+[System.Serializable]
 public class CharacterData_SO : ScriptableObject
 {
     [Header("States Info")]

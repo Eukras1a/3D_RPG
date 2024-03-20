@@ -90,6 +90,11 @@ public class TaskManager : Singleton<TaskManager>
     {
         SaveManager.Instance.SaveTaskList(taskList);
     }
+    public void Load(List<Task> list)
+    {
+        taskList = list;
+        Debug.Log(taskList.Count);
+    }
     public void LoadTask()
     {
         var taskCount = PlayerPrefs.GetInt("TaskCount");
