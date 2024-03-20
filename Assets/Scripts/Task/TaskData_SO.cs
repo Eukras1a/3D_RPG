@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Task", menuName = "Data/Task Data")]
+[System.Serializable]
 public class TaskData_SO : ScriptableObject
 {
     [System.Serializable]
