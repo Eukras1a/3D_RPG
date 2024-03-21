@@ -65,11 +65,10 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
         //TODO:加载场景时修改
         GameManager.Instance.AddObserver(this);
     }
-
-    /*    void OnEnable() 
-        { 
-            GameManager.Instance.AddObserver(this);
-        }*/
+    void OnEnable()
+    {
+        GameManager.Instance.AddObserver(this);
+    }
     void OnDisable()
     {
         if (!GameManager.IsInitialized)
@@ -81,7 +80,7 @@ public class EnemyController : MonoBehaviour, IEndGameObserver
         }
         if (TaskManager.IsInitialized && isDead)
         {
-            TaskManager.Instance.UpdateTaskProgress(characterStates.characterData.characterName,1);
+            TaskManager.Instance.UpdateTaskProgress(characterStates.characterData.characterName, 1);
         }
     }
     void Update()

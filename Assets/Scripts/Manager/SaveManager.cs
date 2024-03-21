@@ -17,6 +17,7 @@ public class SaveManager : Singleton<SaveManager>
     string currentSaveFileName;
     List<Task> taskList;
     int playerID;
+
     public string SaveScene
     {
         get
@@ -99,7 +100,8 @@ public class SaveManager : Singleton<SaveManager>
     public void LoadGameData(string name)
     {
         DeleteEmptyOrRepeat();
-        InventoryManager.Instance.LoadData();
+        //TODO:±³°ü´æµµ¸ÄÔì
+        //InventoryManager.Instance.LoadData();
         var temp = gameFileData.gameFiles.Find(gf => gf.fileName == name);
         SceneController.Instance.LoadGame(temp.playerPrefabID, temp.playerLocationOnSceneLoad.position, temp.playerLocationOnSceneLoad.rotation, temp.lastScene);
     }

@@ -1,18 +1,20 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EscapeMenuUI : MonoBehaviour
+public class MenuUI : MonoBehaviour
 {
     GameObject mainMenu;
-    GameObject saveMenu;
+    GameObject archiveMenu;
     GameObject confirmMenu;
     public SaveFileButton SaveButtonPrefab;
     [Header("Main Menu")]
-    public Button saveButton;
+    public Button archiveButton;
+    public Button settingButton;
+    public Button exitButton;
+    [Header("Archive Menu")]
     public Button createButton;
     public Button loadButton;
     public Button deleteButton;
-    public Button exitButton;
     [Header("Confirm Menu")]
     public InputField fileName;
     public Button confirm;
@@ -25,7 +27,7 @@ public class EscapeMenuUI : MonoBehaviour
     {
         None,
         Main,
-        Save,
+        Archive,
         Confirm,
     }
     EscapeMenuState menu = EscapeMenuState.None;
@@ -33,7 +35,7 @@ public class EscapeMenuUI : MonoBehaviour
     private void Awake()
     {
         mainMenu = transform.GetChild(0).gameObject;
-        saveMenu = transform.GetChild(1).gameObject;
+        archiveMenu = transform.GetChild(1).gameObject;
         confirmMenu = transform.GetChild(2).gameObject;
         ChangeMenuStates(EscapeMenuState.None);
     }
@@ -41,7 +43,7 @@ public class EscapeMenuUI : MonoBehaviour
     {
         confirm.onClick.AddListener(OnConfirm);
         cancel.onClick.AddListener(OnCancel);
-        saveButton.onClick.AddListener(OnLoadSaveMenu);
+        archiveButton.onClick.AddListener(OnLoadArchiveMenu);
         createButton.onClick.AddListener(OnCreate);
         loadButton.onClick.AddListener(OnLoad);
         deleteButton.onClick.AddListener(OnDelete);
@@ -77,7 +79,7 @@ public class EscapeMenuUI : MonoBehaviour
     {
         confirm.onClick.RemoveListener(OnConfirm);
         cancel.onClick.RemoveListener(OnCancel);
-        saveButton.onClick.RemoveListener(OnLoadSaveMenu);
+        archiveButton.onClick.RemoveListener(OnLoadArchiveMenu);
         createButton.onClick.RemoveListener(OnCreate);
         loadButton.onClick.RemoveListener(OnLoad);
         deleteButton.onClick.RemoveListener(OnDelete);
@@ -108,15 +110,15 @@ public class EscapeMenuUI : MonoBehaviour
     void OnConfirm()
     {
         SaveManager.Instance.SaveFile(fileName.text);
-        OnLoadSaveMenu();
+        OnLoadArchiveMenu();
     }
     void OnCancel()
     {
-        ChangeMenuStates(EscapeMenuState.Save);
+        ChangeMenuStates(EscapeMenuState.Archive);
     }
-    void OnLoadSaveMenu()
+    void OnLoadArchiveMenu()
     {
-        ChangeMenuStates(EscapeMenuState.Save);
+        ChangeMenuStates(EscapeMenuState.Archive);
         ReadSavedFileData();
         fileName.text = null;
     }
@@ -124,7 +126,7 @@ public class EscapeMenuUI : MonoBehaviour
     {
         GameManager.Instance.IsStopGame = false;
         Time.timeScale = 1;
-        SceneController.Instance.LoadMainScene();
+        SceneController.Instance.LoadMenuScene();
     }
     #endregion
     public void RigisterFile(string id)
@@ -135,7 +137,7 @@ public class EscapeMenuUI : MonoBehaviour
     {
         menu = state;
         mainMenu.SetActive(false);
-        saveMenu.SetActive(false);
+        archiveMenu.SetActive(false);
         confirmMenu.SetActive(false);
         currentSelectFile = null;
         switch (state)
@@ -147,8 +149,8 @@ public class EscapeMenuUI : MonoBehaviour
             case EscapeMenuState.Main:
                 mainMenu.SetActive(true);
                 break;
-            case EscapeMenuState.Save:
-                saveMenu.SetActive(true);
+            case EscapeMenuState.Archive:
+                archiveMenu.SetActive(true);
                 break;
             case EscapeMenuState.Confirm:
                 confirmMenu.SetActive(true);
@@ -169,6 +171,5 @@ public class EscapeMenuUI : MonoBehaviour
                 newData.SetUpDataInfo(item.fileName, item.createTime);
             }
         }
-
     }
 }

@@ -14,7 +14,7 @@ public class GameManager : Singleton<GameManager>
     /*[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
-        SceneManager.LoadScene("Menu");
+        SceneManager.LoadScene_Teleport("Menu");
     }*/
     protected override void Awake()
     {

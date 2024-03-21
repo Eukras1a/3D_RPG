@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SaveFileButton : MonoBehaviour
@@ -29,6 +30,13 @@ public class SaveFileButton : MonoBehaviour
     }
     private void OnRigisterFileData()
     {
-        FindObjectOfType<EscapeMenuUI>().RigisterFile(id);
+        if (SceneManager.GetActiveScene().name != "0_Menu")
+        {
+            FindObjectOfType<MenuUI>().RigisterFile(id);
+        }
+        else
+        {
+            FindObjectOfType<MainMenuArchive>().RigisterFile(id);
+        }
     }
 }

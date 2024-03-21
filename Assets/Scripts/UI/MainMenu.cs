@@ -6,9 +6,11 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour
 {
     public Button newGameBtn;
-    public Button continueBtn;
+    public Button loadBtn;
     public Button quitBtn;
     public Button backBtn;
+
+    public MainMenuArchive archive;
     PlayableDirector director;
 
     [Header("Player Model")]
@@ -16,17 +18,22 @@ public class MainMenu : MonoBehaviour
     public GameObject femalePlayerModel;
     public GameObject dogPlayerModel;
     GameObject currentPlayerModel;
+
+    GameObject startMenu;
+    GameObject selectMenu;
     int playerID;
     void Awake()
     {
         director = FindObjectOfType<PlayableDirector>();
         director.stopped += NewGame;
-        newGameBtn.onClick.AddListener(ChangePanel);
-        continueBtn.onClick.AddListener(ContinueGame);
-        quitBtn.onClick.AddListener(QuitGame);
-        backBtn.onClick.AddListener(BackToStart);
-        transform.GetChild(0).gameObject.SetActive(true);
-        transform.GetChild(1).gameObject.SetActive(false);
+        newGameBtn.onClick.AddListener(OnChangePanel);
+        loadBtn.onClick.AddListener(OnLoadGame);
+        quitBtn.onClick.AddListener(OnQuitGame);
+        backBtn.onClick.AddListener(OnBack);
+        startMenu = transform.GetChild(0).gameObject;
+        selectMenu = transform.GetChild(1).gameObject;
+        startMenu.SetActive(true);
+        selectMenu.SetActive(false);
         HideAllModel();
     }
     private void Update()
@@ -59,31 +66,33 @@ public class MainMenu : MonoBehaviour
         playerID = id;
         director.Play();
     }
-    void BackToStart()
-    {
-        currentPlayerModel = null;
-        transform.GetChild(0).gameObject.SetActive(true);
-        transform.GetChild(1).gameObject.SetActive(false);
-    }
-    void ChangePanel()
-    {
-        transform.GetChild(0).gameObject.SetActive(false);
-        transform.GetChild(1).gameObject.SetActive(true);
-    }
+    #region ÏìÓ¦ÊÂ¼þ
     void NewGame(PlayableDirector pd)
     {
         PlayerPrefs.DeleteAll();
-        SceneController.Instance.LoadNewGameScene(playerID);
+        SceneController.Instance.LoadNewGame(playerID);
     }
-    void ContinueGame()
+    void OnBack()
     {
-        SceneController.Instance.ContinueGame();
+        currentPlayerModel = null;
+        startMenu.SetActive(true);
+        selectMenu.SetActive(false);
     }
-    void QuitGame()
+    void OnChangePanel()
+    {
+        startMenu.SetActive(false);
+        selectMenu.SetActive(true);
+    }
+    void OnLoadGame()
+    {
+        archive.EnableArchivePanel();
+    }
+    void OnQuitGame()
     {
 #if UNITY_EDITOR
         EditorApplication.isPlaying = false;
 #endif
         Application.Quit();
     }
+    #endregion
 }
