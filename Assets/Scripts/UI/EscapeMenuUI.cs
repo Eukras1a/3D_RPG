@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -88,8 +87,11 @@ public class EscapeMenuUI : MonoBehaviour
     #region ÏìÓ¦ÊÂ¼þ
     void OnLoad()
     {
-        ChangeMenuStates(EscapeMenuState.None);
-        SaveManager.Instance.LoadGameData(currentSelectFile);
+        if (currentSelectFile != null)
+        {
+            SaveManager.Instance.LoadGameData(currentSelectFile);
+            ChangeMenuStates(EscapeMenuState.None);
+        }
     }
     void OnDelete()
     {

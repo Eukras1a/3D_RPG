@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -135,7 +134,7 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
         StartCoroutine(LoadScene(SaveManager.Instance.SaveScene));
     }
 
-    public void LoadGame(int id,Vector3 position,Quaternion rotation,string scene)
+    public void LoadGame(int id, Vector3 position, Quaternion rotation, string scene)
     {
         Debug.Log($"Ins{id}in{scene},pos{position},rot{rotation}");
     }

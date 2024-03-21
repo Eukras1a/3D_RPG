@@ -99,9 +99,9 @@ public class SaveManager : Singleton<SaveManager>
     public void LoadGameData(string name)
     {
         DeleteEmptyOrRepeat();
-        currentSaveFileName = name;
         InventoryManager.Instance.LoadData();
-        //SceneController.Instance.LoadGame(CurrentFileData.playerPrefabID, CurrentFileData.playerLocationOnSceneLoad.position, CurrentFileData.playerLocationOnSceneLoad.rotation, CurrentFileData.lastScene);
+        var temp = gameFileData.gameFiles.Find(gf => gf.fileName == name);
+        SceneController.Instance.LoadGame(temp.playerPrefabID, temp.playerLocationOnSceneLoad.position, temp.playerLocationOnSceneLoad.rotation, temp.lastScene);
     }
     public void DeleteData(string name)
     {
