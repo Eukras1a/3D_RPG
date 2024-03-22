@@ -22,7 +22,6 @@ public class MenuUI : MonoBehaviour
     public RectTransform dataListTransform;
 
     string currentSelectFile;
-
     enum EscapeMenuState
     {
         None,

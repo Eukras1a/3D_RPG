@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,13 +5,13 @@ public class MainMenuArchive : MonoBehaviour
 {
     public Button loadButton;
     public Button deleteButton;
-    GameObject archiveMenu;
     public SaveFileButton SaveButtonPrefab;
     public RectTransform dataListTransform;
-    string currentSelectFile;
 
+    string currentSelectFile;
     bool isOpen;
     GameObject archivePanel;
+    #region 周期函数
     private void Awake()
     {
         archivePanel = transform.GetChild(0).gameObject;
@@ -40,6 +38,8 @@ public class MainMenuArchive : MonoBehaviour
         loadButton.onClick.RemoveListener(OnLoad);
         deleteButton.onClick.RemoveListener(OnDelete);
     }
+    #endregion
+    #region 响应事件
     void OnLoad()
     {
         if (currentSelectFile != null)
@@ -55,6 +55,7 @@ public class MainMenuArchive : MonoBehaviour
             ReadSavedFileData();
         }
     }
+    #endregion
     public void EnableArchivePanel()
     {
         archivePanel.SetActive(true);

@@ -144,11 +144,6 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
         return null;
     }
 
-    public void ContinueGame()
-    {
-        StartCoroutine(LoadScene_Teleport(SaveManager.Instance.SaveScene));
-    }
-
     public void LoadGame(int id, Vector3 position, Quaternion rotation, string scene)
     {
         SelectPlayerMode(id);

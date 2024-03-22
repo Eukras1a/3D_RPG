@@ -4,7 +4,9 @@ using UnityEngine.UI;
 public class TaskNameButton : MonoBehaviour
 {
     public Text taskNameText;
+    [HideInInspector]
     public TaskData_SO currentData;
+    [HideInInspector]
     public Text taskContentText;
 
     private void Awake()

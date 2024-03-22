@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static TaskManager;
 public enum FileDataState
 {
     None,
@@ -15,21 +14,14 @@ public class SaveManager : Singleton<SaveManager>
     const string filePath = "F:/SaveData/SAVEDATA.SD";
     GameFileData gameFileData = new GameFileData();
     string currentSaveFileName;
-    List<Task> taskList;
     int playerID;
 
-    public string SaveScene
-    {
-        get
-        {
-            return PlayerPrefs.GetString("saveScene");
-        }
-    }
+
     protected override void Awake()
     {
         base.Awake();
         DontDestroyOnLoad(this);
-        LoadFileGameData();
+        LoadFileData();
     }
 
     void Update()
@@ -40,12 +32,13 @@ public class SaveManager : Singleton<SaveManager>
             Debug.Log("Saved.");
         }
     }
+    #region ×¼±¸·ÏÆú
     public void SavePlayerData()
     {
         Save(GameManager.Instance.playerStates.characterData, "playerData");
         InventoryManager.Instance.SaveData();
         TaskManager.Instance.SaveTask();
-        TaskManager.Instance.Save();
+        SaveFileData();
     }
     public void LoadPlayerData()
     {
@@ -66,29 +59,37 @@ public class SaveManager : Singleton<SaveManager>
             JsonUtility.FromJsonOverwrite(PlayerPrefs.GetString(key), data);
         }
     }
+    #endregion
     public void UpdateGameFileData()
     {
-        var tempFileData = new FileData()
+        if (currentSaveFileName != null)
         {
-            fileName = currentSaveFileName,
-            createTime = DateTime.Now.ToString(),
-            playerPrefabID = playerID,
-            playerData = GameManager.Instance.playerStates.characterData,
-        };
-        tempFileData.SavePlayerTransformInfo(SceneManager.GetActiveScene().name, GameManager.Instance.playerStates.transform);
-        gameFileData.currentGameFile = tempFileData.fileName;
-        gameFileData.gameFiles.Add(tempFileData);
+            var tempFileData = new FileData()
+            {
+                fileName = currentSaveFileName,
+                createTime = DateTime.Now.ToString(),
+                playerPrefabID = playerID,
+                playerData = GameManager.Instance.playerStates.characterData,
+            };
+            tempFileData.SavePlayerTransformInfo(SceneManager.GetActiveScene().name, GameManager.Instance.playerStates.transform);
+            gameFileData.currentGameFile = tempFileData.fileName;
+            gameFileData.gameFiles.Add(tempFileData);
+            SaveFileData();
+            SaveM();
+        }
     }
-    public void SaveGameData()
+    void SaveM()
     {
-        UpdateGameFileData();
-        DeleteEmptyOrRepeat();
         InventoryManager.Instance.SaveData();
-        TaskManager.Instance.Save();
+        TaskManager.Instance.SaveTask();
+    }
+    public void SaveFileData()
+    {
+        DeleteEmptyOrRepeat();
         string jsonData = JsonUtility.ToJson(gameFileData, true);
         File.WriteAllText(filePath, jsonData);
     }
-    void LoadFileGameData()
+    void LoadFileData()
     {
         if (File.Exists(filePath))
         {
@@ -102,6 +103,7 @@ public class SaveManager : Singleton<SaveManager>
         DeleteEmptyOrRepeat();
         //TODO:±³°ü´æµµ¸ÄÔì
         //InventoryManager.Instance.LoadData();
+        TaskManager.Instance.LoadTask();
         var temp = gameFileData.gameFiles.Find(gf => gf.fileName == name);
         SceneController.Instance.LoadGame(temp.playerPrefabID, temp.playerLocationOnSceneLoad.position, temp.playerLocationOnSceneLoad.rotation, temp.lastScene);
     }
@@ -119,8 +121,9 @@ public class SaveManager : Singleton<SaveManager>
                 break;
             }
         }
-        SaveGameData();
+        SaveFileData();
     }
+    #region ´æµµ¼ì²â
     void DeleteEmptyOrRepeat()
     {
         for (int i = gameFileData.gameFiles.Count - 1; i >= 0; i--)
@@ -153,6 +156,7 @@ public class SaveManager : Singleton<SaveManager>
         }
         return true;
     }
+    #endregion
 
     #region Get/Set
     public void SaveFile(string name)
@@ -162,17 +166,13 @@ public class SaveManager : Singleton<SaveManager>
             if (name != null)
             {
                 currentSaveFileName = name;
-                SaveGameData();
+                UpdateGameFileData();
             }
         }
     }
     public void RigisterPlayerID(int id)
     {
         playerID = id;
-    }
-    public void SaveTaskList(List<Task> list)
-    {
-        taskList = list;
     }
     public List<FileData> GetSavedFileData()
     {

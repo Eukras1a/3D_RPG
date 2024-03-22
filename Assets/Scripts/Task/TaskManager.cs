@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -42,13 +43,13 @@ public class TaskManager : Singleton<TaskManager>
             }
         }
     }
-    public List<Task> taskList = new List<Task>();
 
+    public List<Task> taskList = new List<Task>();
+    
     private void Start()
     {
         LoadTask();
     }
-
     public bool HaveTask(TaskData_SO data)
     {
         if (data != null)
@@ -85,15 +86,6 @@ public class TaskManager : Singleton<TaskManager>
         {
             SaveManager.Instance.Save(taskList[i].taskData, "task" + i);
         }
-    }
-    public void Save()
-    {
-        SaveManager.Instance.SaveTaskList(taskList);
-    }
-    public void Load(List<Task> list)
-    {
-        taskList = list;
-        Debug.Log(taskList.Count);
     }
     public void LoadTask()
     {
