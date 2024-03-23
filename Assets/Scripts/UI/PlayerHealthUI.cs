@@ -18,8 +18,11 @@ public class PlayerHealthUI : MonoBehaviour
     }
     void UpdateInfo()
     {
-        health.fillAmount = (float)GameManager.Instance.playerStates.CurrentHealth / GameManager.Instance.playerStates.MaxHealth;
-        exp.fillAmount = (float)GameManager.Instance.playerStates.CurrentExp / GameManager.Instance.playerStates.BaseExp;
-        level.text = "LEVEL:" + GameManager.Instance.playerStates.CurrentLevel;
+        if (!SceneController.Instance.IsTrans)
+        {
+            health.fillAmount = (float)GameManager.Instance.playerStates.CurrentHealth / GameManager.Instance.playerStates.MaxHealth;
+            exp.fillAmount = (float)GameManager.Instance.playerStates.CurrentExp / GameManager.Instance.playerStates.BaseExp;
+            level.text = "LEVEL:" + GameManager.Instance.playerStates.CurrentLevel;
+        }
     }
 }

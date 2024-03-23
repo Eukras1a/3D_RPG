@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -45,11 +44,13 @@ public class TaskManager : Singleton<TaskManager>
     }
 
     public List<Task> taskList = new List<Task>();
-    
-    private void Start()
+
+    protected override void Awake()
     {
-        LoadTask();
+        base.Awake();
+        DontDestroyOnLoad(this);
     }
+
     public bool HaveTask(TaskData_SO data)
     {
         if (data != null)
@@ -79,21 +80,20 @@ public class TaskManager : Singleton<TaskManager>
             task.taskData.CheckTaskProgress();
         }
     }
-    public void SaveTask()
+    public void SaveTask(string name)
     {
-        PlayerPrefs.SetInt("TaskCount", taskList.Count);
+        SaveManager.Instance.SetTaskCount(taskList.Count);
         for (int i = 0; i < taskList.Count; i++)
         {
-            SaveManager.Instance.Save(taskList[i].taskData, "task" + i);
+            SaveManager.Instance.Save(taskList[i].taskData, name + "task" + i);
         }
     }
-    public void LoadTask()
+    public void LoadTask(int count, string name)
     {
-        var taskCount = PlayerPrefs.GetInt("TaskCount");
-        for (int i = 0; i < taskCount; i++)
+        for (int i = 0; i < count; i++)
         {
             var newTask = ScriptableObject.CreateInstance<TaskData_SO>();
-            SaveManager.Instance.Load(newTask, "task" + i);
+            SaveManager.Instance.Load(newTask, name + "task" + i);
             taskList.Add(new Task { taskData = newTask });
         }
     }

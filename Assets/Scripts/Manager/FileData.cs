@@ -7,6 +7,7 @@ public class FileData
     public string createTime;
     public string lastScene;
     public int playerPrefabID;
+    public int taskCount;
     public PlayerSceneLocation playerLocationOnSceneLoad;
     public SavedPlayerInfo savedPlayerInfo;
     public void SavePlayerTransformInfo(string sceneName, Transform t)

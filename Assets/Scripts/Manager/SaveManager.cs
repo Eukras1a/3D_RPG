@@ -15,8 +15,8 @@ public class SaveManager : Singleton<SaveManager>
     GameFileData gameFileData = new GameFileData();
     string currentSaveFileName;
     int playerID;
+    int taskCount;
     CharacterData_SO data;
-    bool isTrans;
     protected override void Awake()
     {
         base.Awake();
@@ -24,7 +24,6 @@ public class SaveManager : Singleton<SaveManager>
         LoadFileData();
         data = ScriptableObject.CreateInstance<CharacterData_SO>();
     }
-
     public void Save(UnityEngine.Object data, string key)
     {
         var jsonData = JsonUtility.ToJson(data, true);
@@ -44,6 +43,7 @@ public class SaveManager : Singleton<SaveManager>
         {
             if (currentSaveFileName != null)
             {
+                SaveM(currentSaveFileName);
                 var player = GameManager.Instance.playerStates.characterData;
                 var tempPlayerData = new SavedPlayerInfo()
                 {
@@ -64,22 +64,21 @@ public class SaveManager : Singleton<SaveManager>
                     fileName = currentSaveFileName,
                     createTime = DateTime.Now.ToString(),
                     playerPrefabID = playerID,
+                    taskCount = taskCount,
                     savedPlayerInfo = tempPlayerData,
                 };
-                tempFileData.SavePlayerTransformInfo(SceneManager.GetActiveScene().name, GameManager.Instance.playerStates.transform);
+                tempFileData.SavePlayerTransformInfo(SceneManager.GetActiveScene().name, GameManager.Instance.playerStates.transform);               
                 gameFileData.currentGameFile = tempFileData.fileName;
                 gameFileData.gameFiles.Add(tempFileData);
                 SaveFileData();
-                SaveM();
             }
         }
     }
-    void SaveM()
+    void SaveM(string name)
     {
         InventoryManager.Instance.SaveData();
-        TaskManager.Instance.SaveTask();
+        TaskManager.Instance.SaveTask(name);
     }
-
     public void SaveGameData(string name)
     {
         if (name != null)
@@ -97,21 +96,10 @@ public class SaveManager : Singleton<SaveManager>
         //TODO:±³°ü´æµµ¸ÄÔì
         //InventoryManager.Instance.LoadData();
         currentSaveFileName = name;
-        TaskManager.Instance.LoadTask();
         var temp = gameFileData.gameFiles.Find(gf => gf.fileName == name);
+        TaskManager.Instance.LoadTask(temp.taskCount, name);
         SceneController.Instance.LoadGame(temp.playerPrefabID, temp.playerLocationOnSceneLoad.position, temp.playerLocationOnSceneLoad.rotation, temp.lastScene);
-
-        data.characterName = temp.savedPlayerInfo.characterName;
-        data.maxHealth = temp.savedPlayerInfo.maxHealth;
-        data.currentHealth = temp.savedPlayerInfo.currentHealth;
-        data.baseDefence = temp.savedPlayerInfo.baseDefence;
-        data.currentDefence = temp.savedPlayerInfo.currentDefence;
-        data.killPoint = temp.savedPlayerInfo.killPoint;
-        data.currentLevel = temp.savedPlayerInfo.currentLevel;
-        data.maxLevel = temp.savedPlayerInfo.maxLevel;
-        data.currentExp = temp.savedPlayerInfo.currentExp;
-        data.baseExp = temp.savedPlayerInfo.baseExp;
-        data.levelBuff = temp.savedPlayerInfo.levelBuff;
+        CopyData(data, temp);
     }
     public void DeleteGameData(string name)
     {
@@ -181,6 +169,20 @@ public class SaveManager : Singleton<SaveManager>
     }
     #endregion
     #region Get/Set
+    public void CopyData(CharacterData_SO data, FileData temp)
+    {
+        data.characterName = temp.savedPlayerInfo.characterName;
+        data.maxHealth = temp.savedPlayerInfo.maxHealth;
+        data.currentHealth = temp.savedPlayerInfo.currentHealth;
+        data.baseDefence = temp.savedPlayerInfo.baseDefence;
+        data.currentDefence = temp.savedPlayerInfo.currentDefence;
+        data.killPoint = temp.savedPlayerInfo.killPoint;
+        data.currentLevel = temp.savedPlayerInfo.currentLevel;
+        data.maxLevel = temp.savedPlayerInfo.maxLevel;
+        data.currentExp = temp.savedPlayerInfo.currentExp;
+        data.baseExp = temp.savedPlayerInfo.baseExp;
+        data.levelBuff = temp.savedPlayerInfo.levelBuff;
+    }
     public void SetPlayerData()
     {
         if (SceneController.Instance.IsTrans)
@@ -188,13 +190,9 @@ public class SaveManager : Singleton<SaveManager>
             GameManager.Instance.SetPlayerData(data);
         }
     }
-    public void SetTransitionT()
+    public void SetTaskCount(int count)
     {
-        isTrans = true;
-    }
-    public void SetTransitionF()
-    {
-        isTrans = false;
+        taskCount = count;
     }
     public void RigisterPlayerID(int id)
     {
