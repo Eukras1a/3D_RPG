@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using static TaskManager;
 
 [System.Serializable]
 public class FileData
@@ -10,7 +8,7 @@ public class FileData
     public string lastScene;
     public int playerPrefabID;
     public PlayerSceneLocation playerLocationOnSceneLoad;
-    public CharacterData_SO playerData;
+    public SavedPlayerInfo savedPlayerInfo;
     public void SavePlayerTransformInfo(string sceneName, Transform t)
     {
         lastScene = sceneName;
@@ -26,4 +24,21 @@ public class PlayerSceneLocation
 {
     public Vector3 position;
     public Quaternion rotation;
+}
+[System.Serializable]
+public class SavedPlayerInfo
+{
+    public string characterName;
+    public int maxHealth;
+    public int currentHealth;
+    public int baseDefence;
+    public int currentDefence;
+
+    public int killPoint;
+
+    public int currentLevel;
+    public int maxLevel;
+    public int baseExp;
+    public int currentExp;
+    public float levelBuff;
 }

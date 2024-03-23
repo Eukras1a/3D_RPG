@@ -98,7 +98,7 @@ public class MenuUI : MonoBehaviour
     {
         if (currentSelectFile != null)
         {
-            SaveManager.Instance.DeleteData(currentSelectFile);
+            SaveManager.Instance.DeleteGameData(currentSelectFile);
             ReadSavedFileData();
         }
     }
@@ -108,7 +108,7 @@ public class MenuUI : MonoBehaviour
     }
     void OnConfirm()
     {
-        SaveManager.Instance.SaveFile(fileName.text);
+        SaveManager.Instance.SaveGameData(fileName.text);
         OnLoadArchiveMenu();
     }
     void OnCancel()

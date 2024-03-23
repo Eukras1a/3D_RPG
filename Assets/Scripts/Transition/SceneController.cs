@@ -14,11 +14,15 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
     bool fadeFinished;
     float deadWait;
     bool isdeadWait;
+    string saveKey;
+    public bool IsTrans
+    {
+        get; private set;
+    }
     protected override void Awake()
     {
         base.Awake();
         DontDestroyOnLoad(this);
-        instantiatePlayerPrefab = dogPlayerPrefab;
     }
     void Start()
     {
@@ -26,6 +30,7 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
         fadeFinished = true;
         deadWait = 2f;
         isdeadWait = false;
+        saveKey = "AutoSave" + Random.Range(0, 1000).ToString();
     }
     void Update()
     {
@@ -50,6 +55,7 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
     }
     public void TransitionToDestination(TransitionPoint transitionPoint)
     {
+        IsTrans = true;
         switch (transitionPoint.transitionType)
         {
             case TransitionPoint.TransitionType.Same:
@@ -60,16 +66,20 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
                 break;
         }
     }
+    #region IEnumerator
     IEnumerator Transition(string sceneName, TransitionDestination.DestinationTag destinationTag)
     {
         SceneFader fade = Instantiate(sceneFaderPrefab);
-        SaveManager.Instance.SavePlayerData();
+        
         if (SceneManager.GetActiveScene().name != sceneName)
         {
+            SaveManager.Instance.SaveGameData(saveKey);
             yield return StartCoroutine(fade.FadeOut(2));
             yield return SceneManager.LoadSceneAsync(sceneName);
             yield return Instantiate(instantiatePlayerPrefab, GetDestination(destinationTag).transform.position, GetDestination(destinationTag).transform.rotation);
-            SaveManager.Instance.LoadPlayerData();
+            SaveManager.Instance.LoadGameData(saveKey);
+            SaveManager.Instance.DeleteGameData(saveKey);
+            IsTrans = false;
             yield return StartCoroutine(fade.FadeIn(2));
             yield break;
         }
@@ -79,40 +89,27 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
             player.GetComponent<NavMeshAgent>().enabled = false;
             player.transform.SetPositionAndRotation(GetDestination(destinationTag).transform.position, GetDestination(destinationTag).transform.rotation);
             player.GetComponent<NavMeshAgent>().enabled = true;
+            IsTrans = false;
             yield return null;
         }
     }
-    IEnumerator LoadScene_Teleport(string scene)
+
+    IEnumerator LoadScene(string scene, Vector3 position, Quaternion rotation)
     {
         SceneFader fade = Instantiate(sceneFaderPrefab);
-
         if (scene != null)
         {
             yield return StartCoroutine(fade.FadeOut(2));
             yield return SceneManager.LoadSceneAsync(scene);
-            yield return player = Instantiate(instantiatePlayerPrefab, GameManager.Instance.GetEntrance().position, GameManager.Instance.GetEntrance().rotation);
-
-            SaveManager.Instance.SavePlayerData();
-            yield return StartCoroutine(fade.FadeIn(2));
-            yield break;
-        }
-    }
-    IEnumerator LoadScene_Document(string scene, Vector3 position, Quaternion rotation)
-    {
-        SceneFader fade = Instantiate(sceneFaderPrefab);
-
-        if (scene != null)
-        {
-            yield return StartCoroutine(fade.FadeOut(2));
-            yield return SceneManager.LoadSceneAsync(scene);
+            if (position == Vector3.zero)
+            {
+                position = GameManager.Instance.GetEntrance().position;
+            }
             yield return player = Instantiate(instantiatePlayerPrefab, position, rotation);
-
-            SaveManager.Instance.SavePlayerData();
             yield return StartCoroutine(fade.FadeIn(2));
             yield break;
         }
     }
-
     IEnumerator LoadMenu()
     {
         SceneFader fade = Instantiate(sceneFaderPrefab);
@@ -121,6 +118,7 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
         yield return StartCoroutine(fade.FadeIn(2));
         yield break;
     }
+    #endregion
     public void LoadMenuScene()
     {
         StartCoroutine(LoadMenu());
@@ -129,7 +127,15 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
     {
         SelectPlayerMode(id);
         SaveManager.Instance.RigisterPlayerID(id);
-        StartCoroutine(LoadScene_Teleport("1_Forest"));
+        StartCoroutine(LoadScene("1_Forest", Vector3.zero, Quaternion.identity));
+    }
+    public void LoadGame(int id, Vector3 position, Quaternion rotation, string scene)
+    {
+        if (!IsTrans)
+        {
+            SelectPlayerMode(id);
+            StartCoroutine(LoadScene(scene, position, rotation));
+        }
     }
     TransitionDestination GetDestination(TransitionDestination.DestinationTag destinationTag)
     {
@@ -143,13 +149,6 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
         }
         return null;
     }
-
-    public void LoadGame(int id, Vector3 position, Quaternion rotation, string scene)
-    {
-        SelectPlayerMode(id);
-        StartCoroutine(LoadScene_Document(scene, position, rotation));
-    }
-
     public void EndNotify()
     {
         isdeadWait = true;

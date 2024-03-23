@@ -51,7 +51,7 @@ public class MainMenuArchive : MonoBehaviour
     {
         if (currentSelectFile != null)
         {
-            SaveManager.Instance.DeleteData(currentSelectFile);
+            SaveManager.Instance.DeleteGameData(currentSelectFile);
             ReadSavedFileData();
         }
     }

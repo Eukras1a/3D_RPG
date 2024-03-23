@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        SaveManager.Instance.LoadPlayerData();
+        SaveManager.Instance.SetPlayerData();
     }
 
     void OnDisable()
@@ -41,7 +41,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        isDead = characterStates.CurrentHealth == 0;
+        if (!SceneController.Instance.IsTrans)
+        {
+            isDead = characterStates.CurrentHealth == 0;
+        }
         if (isDead)
         {
             GameManager.Instance.NotifyObservers();

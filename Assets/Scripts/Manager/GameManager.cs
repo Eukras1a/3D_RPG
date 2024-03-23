@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    [HideInInspector] public CharacterStates playerStates;
+    [HideInInspector] public CharacterStates playerStates = new CharacterStates();
     [HideInInspector] public bool IsStopGame;
 
     CinemachineFreeLook followCamera;
 
     List<IEndGameObserver> endGameObservers = new List<IEndGameObserver>();
 
+    public bool IsPlayerInitialized
+    {
+        get; private set;
+    }
     /*[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
@@ -20,10 +24,16 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
         DontDestroyOnLoad(this);
+        IsPlayerInitialized = false;
+    }
+    public void SetPlayerData(CharacterData_SO data)
+    {
+        playerStates.characterData = data;
     }
     public void RegisterPlayer(CharacterStates player)
     {
         playerStates = player;
+        IsPlayerInitialized = true;
         followCamera = FindObjectOfType<CinemachineFreeLook>();
         followCamera.Follow = playerStates.transform.GetChild(0).transform;
         followCamera.LookAt = playerStates.transform.GetChild(0).transform;
