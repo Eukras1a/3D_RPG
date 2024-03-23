@@ -55,6 +55,7 @@ public class InventoryManager : Singleton<InventoryManager>
     }
     void Start()
     {
+        SaveManager.Instance.GetInventoryData();
         inventoryUI.RefreshUI();
         actionUI.RefreshUI();
         infoUI.RefreshUI();
@@ -76,17 +77,17 @@ public class InventoryManager : Singleton<InventoryManager>
             infoUI.GetComponent<PlayerInfo>().UpdateInfo();
         }
     }
-    public void SaveData()
+    public void SaveData(string name)
     {
-        SaveManager.Instance.Save(inventoryData, inventoryData.name);
-        SaveManager.Instance.Save(actionData, actionData.name);
-        SaveManager.Instance.Save(equipmentData, equipmentData.name);
+        SaveManager.Instance.Save(inventoryData, name + inventoryData.name);
+        SaveManager.Instance.Save(actionData, name + actionData.name);
+        SaveManager.Instance.Save(equipmentData, name + equipmentData.name);
     }
-    public void LoadData()
+    public void LoadData(string name)
     {
-        SaveManager.Instance.Load(inventoryData, inventoryData.name);
-        SaveManager.Instance.Load(actionData, actionData.name);
-        SaveManager.Instance.Load(equipmentData, equipmentData.name);
+        SaveManager.Instance.Load(inventoryData, name + inventoryData.name);
+        SaveManager.Instance.Load(actionData, name + actionData.name);
+        SaveManager.Instance.Load(equipmentData, name + equipmentData.name);
         inventoryUI.RefreshUI();
         actionUI.RefreshUI();
         infoUI.RefreshUI();

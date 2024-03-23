@@ -32,6 +32,14 @@ public class MainMenuArchive : MonoBehaviour
                 DisableArchivePanel();
             }
         }
+        if (currentSelectFile != null)
+        {
+            loadButton.interactable = true;
+        }
+        else
+        {
+            loadButton.interactable = false;
+        }
     }
     private void OnDisable()
     {
@@ -52,6 +60,7 @@ public class MainMenuArchive : MonoBehaviour
         if (currentSelectFile != null)
         {
             SaveManager.Instance.DeleteGameData(currentSelectFile);
+            currentSelectFile = null;
             ReadSavedFileData();
         }
     }

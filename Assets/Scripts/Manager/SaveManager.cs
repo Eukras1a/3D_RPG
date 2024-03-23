@@ -24,6 +24,7 @@ public class SaveManager : Singleton<SaveManager>
         LoadFileData();
         data = ScriptableObject.CreateInstance<CharacterData_SO>();
     }
+    #region S/L
     public void Save(UnityEngine.Object data, string key)
     {
         var jsonData = JsonUtility.ToJson(data, true);
@@ -37,13 +38,16 @@ public class SaveManager : Singleton<SaveManager>
             JsonUtility.FromJsonOverwrite(PlayerPrefs.GetString(key), data);
         }
     }
+    #endregion
+    #region Gamedata
     public void UpdateGameData()
     {
         if (GameManager.Instance.IsPlayerInitialized)
         {
             if (currentSaveFileName != null)
             {
-                SaveM(currentSaveFileName);
+                TaskManager.Instance.SaveTask(currentSaveFileName);
+                InventoryManager.Instance.SaveData(currentSaveFileName);
                 var player = GameManager.Instance.playerStates.characterData;
                 var tempPlayerData = new SavedPlayerInfo()
                 {
@@ -67,17 +71,12 @@ public class SaveManager : Singleton<SaveManager>
                     taskCount = taskCount,
                     savedPlayerInfo = tempPlayerData,
                 };
-                tempFileData.SavePlayerTransformInfo(SceneManager.GetActiveScene().name, GameManager.Instance.playerStates.transform);               
+                tempFileData.SavePlayerTransformInfo(SceneManager.GetActiveScene().name, GameManager.Instance.playerStates.transform);
                 gameFileData.currentGameFile = tempFileData.fileName;
                 gameFileData.gameFiles.Add(tempFileData);
                 SaveFileData();
             }
         }
-    }
-    void SaveM(string name)
-    {
-        InventoryManager.Instance.SaveData();
-        TaskManager.Instance.SaveTask(name);
     }
     public void SaveGameData(string name)
     {
@@ -93,8 +92,6 @@ public class SaveManager : Singleton<SaveManager>
     public void LoadGameData(string name)
     {
         DeleteEmptyOrRepeat();
-        //TODO:背包存档改造
-        //InventoryManager.Instance.LoadData();
         currentSaveFileName = name;
         var temp = gameFileData.gameFiles.Find(gf => gf.fileName == name);
         TaskManager.Instance.LoadTask(temp.taskCount, name);
@@ -117,6 +114,7 @@ public class SaveManager : Singleton<SaveManager>
         }
         SaveFileData();
     }
+    #endregion
     #region 文件读写
     public void SaveFileData()
     {
@@ -182,6 +180,10 @@ public class SaveManager : Singleton<SaveManager>
         data.currentExp = temp.savedPlayerInfo.currentExp;
         data.baseExp = temp.savedPlayerInfo.baseExp;
         data.levelBuff = temp.savedPlayerInfo.levelBuff;
+    }
+    public void GetInventoryData()
+    {
+        InventoryManager.Instance.LoadData(currentSaveFileName);
     }
     public void SetPlayerData()
     {

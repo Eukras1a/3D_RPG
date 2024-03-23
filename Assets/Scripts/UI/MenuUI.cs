@@ -91,6 +91,7 @@ public class MenuUI : MonoBehaviour
         if (currentSelectFile != null)
         {
             SaveManager.Instance.LoadGameData(currentSelectFile);
+            currentSelectFile = null;
             ChangeMenuStates(EscapeMenuState.None);
         }
     }
