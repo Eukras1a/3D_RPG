@@ -3,11 +3,11 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UI;
 
-public class MainMenu : MonoBehaviour
+public class MainMenu : MonoBehaviour,ILocalizationController
 {
     public Button newGameBtn;
     public Button loadBtn;
-    public Button quitBtn;
+    public Button exitBtn;
     public Button backBtn;
 
     public MainMenuArchive archive;
@@ -25,16 +25,25 @@ public class MainMenu : MonoBehaviour
     void Awake()
     {
         director = FindObjectOfType<PlayableDirector>();
-        director.stopped += NewGame;
-        newGameBtn.onClick.AddListener(OnChangePanel);
-        loadBtn.onClick.AddListener(OnLoadGame);
-        quitBtn.onClick.AddListener(OnQuitGame);
-        backBtn.onClick.AddListener(OnBack);
+        
         startMenu = transform.GetChild(0).gameObject;
         selectMenu = transform.GetChild(1).gameObject;
         startMenu.SetActive(true);
         selectMenu.SetActive(false);
         HideAllModel();
+    }
+    private void Start()
+    {
+        ChangeLanguage();
+    }
+    private void OnEnable()
+    {
+        director.stopped += NewGame;
+        newGameBtn.onClick.AddListener(OnChangePanel);
+        loadBtn.onClick.AddListener(OnLoadGame);
+        exitBtn.onClick.AddListener(OnQuitGame);
+        backBtn.onClick.AddListener(OnBack);
+        LocalizationManager.Instance.AddLocalizationController(this);
     }
     private void Update()
     {
@@ -43,6 +52,15 @@ public class MainMenu : MonoBehaviour
             currentPlayerModel.SetActive(true);
             currentPlayerModel.transform.Rotate(Vector3.up, 150 * Time.deltaTime);
         }
+    }
+    private void OnDisable()
+    {
+        director.stopped -= NewGame;
+        newGameBtn.onClick.RemoveListener(OnChangePanel);
+        loadBtn.onClick.RemoveListener(OnLoadGame);
+        exitBtn.onClick.RemoveListener(OnQuitGame);
+        backBtn.onClick.RemoveListener(OnBack);
+        LocalizationManager.Instance.RemoveLocalizationController(this);
     }
     void HideAllModel()
     {
@@ -95,4 +113,10 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
     #endregion
+    public void ChangeLanguage()
+    {
+        newGameBtn.transform.GetChild(0).GetComponent<Text>().text=LocalizationManager.Instance.GetLocalization("start_game");
+        loadBtn.transform.GetChild(0).GetComponent<Text>().text=LocalizationManager.Instance.GetLocalization("load_archive");
+        exitBtn.transform.GetChild(0).GetComponent<Text>().text=LocalizationManager.Instance.GetLocalization("exit_game");
+    }
 }

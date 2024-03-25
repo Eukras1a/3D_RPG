@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenuArchive : MonoBehaviour
+public class MainMenuArchive : MonoBehaviour,ILocalizationController
 {
     public Button loadButton;
     public Button deleteButton;
@@ -22,6 +22,7 @@ public class MainMenuArchive : MonoBehaviour
     {
         loadButton.onClick.AddListener(OnLoad);
         deleteButton.onClick.AddListener(OnDelete);
+        LocalizationManager.Instance.AddLocalizationController(this);
     }
     private void Update()
     {
@@ -45,6 +46,7 @@ public class MainMenuArchive : MonoBehaviour
     {
         loadButton.onClick.RemoveListener(OnLoad);
         deleteButton.onClick.RemoveListener(OnDelete);
+        LocalizationManager.Instance.RemoveLocalizationController(this);
     }
     #endregion
     #region ÏìÓ¦ÊÂ¼þ
@@ -94,5 +96,9 @@ public class MainMenuArchive : MonoBehaviour
                 newData.SetUpDataInfo(item.fileName, item.createTime);
             }
         }
+    }
+
+    public void ChangeLanguage()
+    {
     }
 }

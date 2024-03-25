@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuUI : MonoBehaviour
+public class MenuUI : MonoBehaviour,ILocalizationController
 {
     GameObject mainMenu;
     GameObject archiveMenu;
@@ -47,6 +47,7 @@ public class MenuUI : MonoBehaviour
         loadButton.onClick.AddListener(OnLoad);
         deleteButton.onClick.AddListener(OnDelete);
         exitButton.onClick.AddListener(OnExitGame);
+        LocalizationManager.Instance.AddLocalizationController(this);
     }
     private void Update()
     {
@@ -83,6 +84,7 @@ public class MenuUI : MonoBehaviour
         loadButton.onClick.RemoveListener(OnLoad);
         deleteButton.onClick.RemoveListener(OnDelete);
         exitButton.onClick.RemoveListener(OnExitGame);
+        LocalizationManager.Instance.RemoveLocalizationController(this);
     }
     #endregion
     #region ÏìÓ¦ÊÂ¼þ
@@ -171,5 +173,10 @@ public class MenuUI : MonoBehaviour
                 newData.SetUpDataInfo(item.fileName, item.createTime);
             }
         }
+    }
+
+    public void ChangeLanguage()
+    {
+        
     }
 }

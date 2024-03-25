@@ -85,7 +85,7 @@ public class TaskManager : Singleton<TaskManager>
         SaveManager.Instance.SetTaskCount(taskList.Count);
         for (int i = 0; i < taskList.Count; i++)
         {
-            SaveManager.Instance.Save(taskList[i].taskData, name + "task" + i);
+            SaveManager.Instance.Save(taskList[i].taskData, name + "_Task_" + i);
         }
     }
     public void LoadTask(int count, string name)
@@ -93,7 +93,7 @@ public class TaskManager : Singleton<TaskManager>
         for (int i = 0; i < count; i++)
         {
             var newTask = ScriptableObject.CreateInstance<TaskData_SO>();
-            SaveManager.Instance.Load(newTask, name + "task" + i);
+            SaveManager.Instance.Load(newTask, name + "_Task_" + i);
             taskList.Add(new Task { taskData = newTask });
         }
     }
