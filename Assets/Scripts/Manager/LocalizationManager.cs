@@ -41,11 +41,6 @@ public class LocalizationManager : Singleton<LocalizationManager>
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            Debug.Log(GetLocalization("start_game"));
-            
-        }
         if (Input.GetKeyDown(KeyCode.X))
         {
             CurrentLanguageState = LanguageState.English;
@@ -74,6 +69,7 @@ public class LocalizationManager : Singleton<LocalizationManager>
     }
     void ReadFromFile()
     {
+        LocalizedDic.Clear();
         string filePath = Application.dataPath + "/Game Data/LocalizationData.xlsx";
         FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateReader(stream);
@@ -88,7 +84,6 @@ public class LocalizationManager : Singleton<LocalizationManager>
         }
         excelReader.Close();
         stream.Close();
-        Debug.Log("º”‘ÿ≥…π¶");
     }
     SystemLanguage GetLanguage(string flag)
     {

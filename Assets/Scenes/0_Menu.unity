@@ -30723,6 +30723,9 @@ MonoBehaviour:
   loadBtn: {fileID: 42030896}
   exitBtn: {fileID: 1944675977}
   backBtn: {fileID: 382655593}
+  m: {fileID: 1412215053}
+  f: {fileID: 362986293}
+  d: {fileID: 852817165}
   archive: {fileID: 240731293422931020}
   malePlayerModel: {fileID: 1828148292331632151}
   femalePlayerModel: {fileID: 1363217211620599191}
@@ -33024,6 +33027,7 @@ MonoBehaviour:
   deleteButton: {fileID: 1559725408921048545}
   SaveButtonPrefab: {fileID: 7131857886184879011, guid: 017043680c460654b9c2980f20485de2, type: 3}
   dataListTransform: {fileID: 240731293435089403}
+  createBtn: {fileID: 8518583669158255909}
 --- !u!224 &240731293422931022
 RectTransform:
   m_ObjectHideFlags: 0

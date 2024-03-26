@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuUI : MonoBehaviour,ILocalizationController
+public class MenuUI : MonoBehaviour, ILocalizationController
 {
     GameObject mainMenu;
     GameObject archiveMenu;
@@ -17,8 +17,8 @@ public class MenuUI : MonoBehaviour,ILocalizationController
     public Button deleteButton;
     [Header("Confirm Menu")]
     public InputField fileName;
-    public Button confirm;
-    public Button cancel;
+    public Button confirmButton;
+    public Button cancelButton;
     public RectTransform dataListTransform;
 
     string currentSelectFile;
@@ -38,10 +38,14 @@ public class MenuUI : MonoBehaviour,ILocalizationController
         confirmMenu = transform.GetChild(2).gameObject;
         ChangeMenuStates(EscapeMenuState.None);
     }
+    private void Start()
+    {
+        ChangeLanguage();
+    }
     private void OnEnable()
     {
-        confirm.onClick.AddListener(OnConfirm);
-        cancel.onClick.AddListener(OnCancel);
+        confirmButton.onClick.AddListener(OnConfirm);
+        cancelButton.onClick.AddListener(OnCancel);
         archiveButton.onClick.AddListener(OnLoadArchiveMenu);
         createButton.onClick.AddListener(OnCreate);
         loadButton.onClick.AddListener(OnLoad);
@@ -77,14 +81,14 @@ public class MenuUI : MonoBehaviour,ILocalizationController
     }
     private void OnDisable()
     {
-        confirm.onClick.RemoveListener(OnConfirm);
-        cancel.onClick.RemoveListener(OnCancel);
+        LocalizationManager.Instance.RemoveLocalizationController(this);
+        confirmButton.onClick.RemoveListener(OnConfirm);
+        cancelButton.onClick.RemoveListener(OnCancel);
         archiveButton.onClick.RemoveListener(OnLoadArchiveMenu);
         createButton.onClick.RemoveListener(OnCreate);
         loadButton.onClick.RemoveListener(OnLoad);
         deleteButton.onClick.RemoveListener(OnDelete);
         exitButton.onClick.RemoveListener(OnExitGame);
-        LocalizationManager.Instance.RemoveLocalizationController(this);
     }
     #endregion
     #region ÏìÓ¦ÊÂ¼þ
@@ -177,6 +181,14 @@ public class MenuUI : MonoBehaviour,ILocalizationController
 
     public void ChangeLanguage()
     {
-        
+        archiveButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("archive");
+        settingButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("set");
+        exitButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("exit_game");
+        createButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("create");
+        loadButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("load");
+        deleteButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("delete");
+        confirmButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("confirm");
+        cancelButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("cancel");
+        fileName.placeholder.GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("get_filename");
     }
 }

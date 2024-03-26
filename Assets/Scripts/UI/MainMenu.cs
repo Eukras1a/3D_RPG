@@ -3,12 +3,15 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UI;
 
-public class MainMenu : MonoBehaviour,ILocalizationController
+public class MainMenu : MonoBehaviour, ILocalizationController
 {
     public Button newGameBtn;
     public Button loadBtn;
     public Button exitBtn;
     public Button backBtn;
+    public Text m;
+    public Text f;
+    public Text d;
 
     public MainMenuArchive archive;
     PlayableDirector director;
@@ -22,10 +25,11 @@ public class MainMenu : MonoBehaviour,ILocalizationController
     GameObject startMenu;
     GameObject selectMenu;
     int playerID;
+    #region ÖÜÆÚº¯Êý
     void Awake()
     {
         director = FindObjectOfType<PlayableDirector>();
-        
+
         startMenu = transform.GetChild(0).gameObject;
         selectMenu = transform.GetChild(1).gameObject;
         startMenu.SetActive(true);
@@ -55,13 +59,14 @@ public class MainMenu : MonoBehaviour,ILocalizationController
     }
     private void OnDisable()
     {
+        LocalizationManager.Instance.RemoveLocalizationController(this);
         director.stopped -= NewGame;
         newGameBtn.onClick.RemoveListener(OnChangePanel);
         loadBtn.onClick.RemoveListener(OnLoadGame);
         exitBtn.onClick.RemoveListener(OnQuitGame);
         backBtn.onClick.RemoveListener(OnBack);
-        LocalizationManager.Instance.RemoveLocalizationController(this);
     }
+    #endregion
     void HideAllModel()
     {
         malePlayerModel.SetActive(false);
@@ -115,8 +120,12 @@ public class MainMenu : MonoBehaviour,ILocalizationController
     #endregion
     public void ChangeLanguage()
     {
-        newGameBtn.transform.GetChild(0).GetComponent<Text>().text=LocalizationManager.Instance.GetLocalization("start_game");
-        loadBtn.transform.GetChild(0).GetComponent<Text>().text=LocalizationManager.Instance.GetLocalization("load_archive");
-        exitBtn.transform.GetChild(0).GetComponent<Text>().text=LocalizationManager.Instance.GetLocalization("exit_game");
+        m.text = LocalizationManager.Instance.GetLocalization("male");
+        f.text = LocalizationManager.Instance.GetLocalization("female");
+        d.text = LocalizationManager.Instance.GetLocalization("secret");
+        backBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("back");
+        newGameBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("start_game");
+        loadBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("load_archive");
+        exitBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("exit_game");
     }
 }

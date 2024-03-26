@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenuArchive : MonoBehaviour,ILocalizationController
+public class MainMenuArchive : MonoBehaviour, ILocalizationController
 {
     public Button loadButton;
     public Button deleteButton;
@@ -11,6 +11,8 @@ public class MainMenuArchive : MonoBehaviour,ILocalizationController
     string currentSelectFile;
     bool isOpen;
     GameObject archivePanel;
+
+    public Text createBtn;
     #region 周期函数
     private void Awake()
     {
@@ -23,6 +25,10 @@ public class MainMenuArchive : MonoBehaviour,ILocalizationController
         loadButton.onClick.AddListener(OnLoad);
         deleteButton.onClick.AddListener(OnDelete);
         LocalizationManager.Instance.AddLocalizationController(this);
+    }
+    private void Start()
+    {
+        ChangeLanguage();
     }
     private void Update()
     {
@@ -44,9 +50,9 @@ public class MainMenuArchive : MonoBehaviour,ILocalizationController
     }
     private void OnDisable()
     {
+        LocalizationManager.Instance.RemoveLocalizationController(this);
         loadButton.onClick.RemoveListener(OnLoad);
         deleteButton.onClick.RemoveListener(OnDelete);
-        LocalizationManager.Instance.RemoveLocalizationController(this);
     }
     #endregion
     #region 响应事件
@@ -97,8 +103,10 @@ public class MainMenuArchive : MonoBehaviour,ILocalizationController
             }
         }
     }
-
     public void ChangeLanguage()
     {
+        createBtn.text = LocalizationManager.Instance.GetLocalization("create");
+        loadButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("load");
+        deleteButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("delete");
     }
 }

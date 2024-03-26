@@ -2,18 +2,21 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SaveFileButton : MonoBehaviour
+public class SaveFileButton : MonoBehaviour, ILocalizationController
 {
     public Text saveName;
     public Text createTime;
+    string nameStr;
+    string timeStr;
     string id;
     public void SetUpDataInfo(string name, string time)
     {
+        ChangeLanguage();
         if (name != null)
         {
             id = name;
-            saveName.text = "NAME:" + name;
-            createTime.text = "TIME:" + time;
+            saveName.text = nameStr + "£º" + name;
+            createTime.text = timeStr + "£º" + time;
         }
         else
         {
@@ -38,5 +41,11 @@ public class SaveFileButton : MonoBehaviour
         {
             FindObjectOfType<MainMenuArchive>().RigisterFile(id);
         }
+    }
+
+    public void ChangeLanguage()
+    {
+        nameStr = LocalizationManager.Instance.GetLocalization("save_name");
+        timeStr = LocalizationManager.Instance.GetLocalization("save_time");
     }
 }
