@@ -27,6 +27,7 @@ public class MainMenu : MonoBehaviour, ILocalizationController
     GameObject startMenu;
     GameObject selectMenu;
     int playerID;
+    bool isSecondaryMenu;
     #region ÖÜÆÚº¯Êý
     void Awake()
     {
@@ -57,6 +58,13 @@ public class MainMenu : MonoBehaviour, ILocalizationController
         {
             currentPlayerModel.SetActive(true);
             currentPlayerModel.transform.Rotate(Vector3.up, 150 * Time.deltaTime);
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isSecondaryMenu)
+            {
+                OnBack();
+            }
         }
     }
     private void OnDisable()
@@ -105,13 +113,16 @@ public class MainMenu : MonoBehaviour, ILocalizationController
     void OnBack()
     {
         currentPlayerModel = null;
+        HideAllModel();
         startMenu.SetActive(true);
         selectMenu.SetActive(false);
+        isSecondaryMenu = false;
     }
     void OnStartNewGame()
     {
         startMenu.SetActive(false);
         selectMenu.SetActive(true);
+        isSecondaryMenu = true;
     }
     void OnLoadGame()
     {

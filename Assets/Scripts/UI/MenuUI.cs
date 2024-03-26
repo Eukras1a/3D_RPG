@@ -9,17 +9,20 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     GameObject settingMenu;
     GameObject confirmMenu;
     public SaveFileButton SaveButtonPrefab;
-    [Header("Main Menu")]
+    [Header("Main Panel")]
     public Button archiveButton;
     public Button settingButton;
     public Button exitButton;
-    [Header("Archive Menu")]
+    [Header("Archive Panel")]
     public Button createButton;
     public Button loadButton;
     public Button deleteButton;
-    [Header("Setting Menu")]
+    [Header("Setting Panel")]
     public Dropdown languageDropdown;
-    [Header("Confirm Menu")]
+    public Dropdown windowDropdown;
+    public Toggle fullScreen;
+    public Text fullScreenLabel;
+    [Header("Confirm Panel")]
     public InputField fileName;
     public Button confirmButton;
     public Button cancelButton;
@@ -47,16 +50,19 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     private void Start()
     {
         LoadLanguage();
+        LoadCustomWindow();
         ChangeLanguage();
     }
     private void OnEnable()
     {
-        LocalizationManager.Instance.AddLocalizationController(this);
-        languageDropdown.onValueChanged.AddListener(OnDropdownValueChanged);
+        LocalizationManager.Instance.AddLocalizationController(this);       
         confirmButton.onClick.AddListener(OnConfirm);
         cancelButton.onClick.AddListener(OnCancel);
         archiveButton.onClick.AddListener(OnOpenArchiveMenu);
         settingButton.onClick.AddListener(OnOpenSettingMenu);
+        fullScreen.onValueChanged.AddListener(OnFullScreenChanged);
+        windowDropdown.onValueChanged.AddListener(OnWindowValueChanged);
+        languageDropdown.onValueChanged.AddListener(OnDropdownValueChanged);
         createButton.onClick.AddListener(OnCreate);
         loadButton.onClick.AddListener(OnLoad);
         deleteButton.onClick.AddListener(OnDelete);
@@ -91,11 +97,13 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     private void OnDisable()
     {
         LocalizationManager.Instance.RemoveLocalizationController(this);
-        languageDropdown.onValueChanged.RemoveListener(OnDropdownValueChanged);
         confirmButton.onClick.RemoveListener(OnConfirm);
         cancelButton.onClick.RemoveListener(OnCancel);
         archiveButton.onClick.RemoveListener(OnOpenArchiveMenu);
         settingButton.onClick.RemoveListener(OnOpenSettingMenu);
+        fullScreen.onValueChanged.RemoveListener(OnFullScreenChanged);
+        windowDropdown.onValueChanged.RemoveListener(OnWindowValueChanged);
+        languageDropdown.onValueChanged.RemoveListener(OnDropdownValueChanged);
         createButton.onClick.RemoveListener(OnCreate);
         loadButton.onClick.RemoveListener(OnLoad);
         deleteButton.onClick.RemoveListener(OnDelete);
@@ -109,8 +117,15 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     }
     void OnDropdownValueChanged(int index)
     {
-        var state = LocalizationManager.Instance.GetLanguageState(languageDropdown.options[index].text);
-        LocalizationManager.Instance.SetLanguageState(state);
+        LocalizationManager.Instance.SetLanguageState(LocalizationManager.Instance.GetLanguageState(languageDropdown.options[index].text));
+    }
+    void OnFullScreenChanged(bool isOn)
+    {
+        GameManager.Instance.SetCustomWindow(windowDropdown.options[windowDropdown.value].text, isOn);
+    }
+    void OnWindowValueChanged(int index)
+    {
+        GameManager.Instance.SetCustomWindow(windowDropdown.options[index].text, fullScreen.isOn);
     }
     void OnLoad()
     {
@@ -169,6 +184,16 @@ public class MenuUI : MonoBehaviour, ILocalizationController
         }
         languageDropdown.options = options;
     }
+    void LoadCustomWindow()
+    {
+        windowDropdown.ClearOptions();
+        List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
+        foreach (var item in GameManager.Instance.GetWindow())
+        {
+            options.Add(new Dropdown.OptionData(item));
+        }
+        windowDropdown.options = options;
+    }
     void ChangeMenuStates(EscapeMenuState state)
     {
         menu = state;
@@ -214,7 +239,8 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     }
     public void ChangeLanguage()
     {
-        archiveButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("secondaryMenu");
+        fullScreenLabel.text = LocalizationManager.Instance.GetLocalization("full_screen");
+        archiveButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("archive");
         settingButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("set");
         exitButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("exit_game");
         createButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("create");

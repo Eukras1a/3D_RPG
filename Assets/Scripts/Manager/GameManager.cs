@@ -11,6 +11,9 @@ public class GameManager : Singleton<GameManager>
 
     List<IEndGameObserver> endGameObservers = new List<IEndGameObserver>();
 
+    List<string> customWindow = new List<string>() {
+        "1920x1080","1600x900","1280x768","640 x480"
+    };
     public bool IsPlayerInitialized
     {
         get; private set;
@@ -63,5 +66,16 @@ public class GameManager : Singleton<GameManager>
             }
         }
         return null;
+    }
+    public List<string> GetWindow()
+    {
+        return customWindow;
+    }
+    public void SetCustomWindow(string resolution, bool fullScreen)
+    {
+        string[] resTemp = resolution.Split('x');
+        int width = int.Parse(resTemp[0]);
+        int height = int.Parse(resTemp[1]);
+        Screen.SetResolution(width, height, fullScreen, 60);
     }
 }
