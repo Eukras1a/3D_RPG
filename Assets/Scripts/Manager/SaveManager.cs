@@ -11,7 +11,7 @@ public enum FileDataState
 }
 public class SaveManager : Singleton<SaveManager>
 {
-    const string filePath = "F:/SaveData/SAVEDATA.SD";
+    string filePath;
     GameFileData gameFileData = new GameFileData();
     string currentSaveFileName;
     int playerID;
@@ -23,6 +23,11 @@ public class SaveManager : Singleton<SaveManager>
         DontDestroyOnLoad(this);
         LoadFileData();
         data = ScriptableObject.CreateInstance<CharacterData_SO>();
+#if UNITY_EDITOR
+        filePath = "F:/SaveData/SAVEDATA.SD";
+#else
+        filePath = Path.Combine(Application.persistentDataPath, "SAVEDATA.SD");
+#endif
     }
     #region S/L
     public void Save(UnityEngine.Object data, string key)

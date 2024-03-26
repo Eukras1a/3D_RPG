@@ -60,7 +60,7 @@ public class LocalizationManager : Singleton<LocalizationManager>
     {
         LocalizedDic.Clear();
         languageOption.Clear();
-        string filePath = Application.dataPath + "/Game Data/LocalizationData.xlsx";
+        string filePath = Path.Combine(Application.streamingAssetsPath, "LocalizationData.xlsx");
         FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateReader(stream);
         DataSet result = excelReader.AsDataSet();
