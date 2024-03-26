@@ -39,7 +39,7 @@ public class SaveFileButton : MonoBehaviour, ILocalizationController
         }
         else
         {
-            FindObjectOfType<MainMenuArchive>().RigisterFile(id);
+            FindObjectOfType<SecondaryMenu>().RigisterFile(id);
         }
     }
 

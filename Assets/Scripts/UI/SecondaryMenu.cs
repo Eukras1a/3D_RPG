@@ -1,38 +1,46 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenuArchive : MonoBehaviour, ILocalizationController
+public class SecondaryMenu : MonoBehaviour, ILocalizationController
 {
+    [Header("Archive Panel")]
+    public Text createBtn;
     public Button loadButton;
     public Button deleteButton;
     public SaveFileButton SaveButtonPrefab;
     public RectTransform dataListTransform;
-
+    [Header("Setting Panel")]
+    public Dropdown languageDropdown;
     string currentSelectFile;
-    bool isOpen;
+    bool isOpenArchivePanel;
+    bool isOpenSetPanel;
     GameObject archivePanel;
-
-    public Text createBtn;
+    GameObject setPanel;
     #region 周期函数
     private void Awake()
     {
         archivePanel = transform.GetChild(0).gameObject;
-        isOpen = false;
+        setPanel = transform.GetChild(1).gameObject;
+        isOpenArchivePanel = false;
         archivePanel.SetActive(false);
+        setPanel.SetActive(false);
     }
     private void OnEnable()
     {
+        LocalizationManager.Instance.AddLocalizationController(this);
         loadButton.onClick.AddListener(OnLoad);
         deleteButton.onClick.AddListener(OnDelete);
-        LocalizationManager.Instance.AddLocalizationController(this);
+        languageDropdown.onValueChanged.AddListener(OnDropdownValueChanged);
     }
     private void Start()
     {
+        LoadLanguage();
         ChangeLanguage();
     }
     private void Update()
     {
-        if (isOpen)
+        if (isOpenArchivePanel)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -53,9 +61,15 @@ public class MainMenuArchive : MonoBehaviour, ILocalizationController
         LocalizationManager.Instance.RemoveLocalizationController(this);
         loadButton.onClick.RemoveListener(OnLoad);
         deleteButton.onClick.RemoveListener(OnDelete);
+        languageDropdown.onValueChanged.RemoveListener(OnDropdownValueChanged);
     }
     #endregion
     #region 响应事件
+    void OnDropdownValueChanged(int index)
+    {
+        var state = LocalizationManager.Instance.GetLanguageState(languageDropdown.options[index].text);
+        LocalizationManager.Instance.SetLanguageState(state);
+    }
     void OnLoad()
     {
         if (currentSelectFile != null)
@@ -76,8 +90,13 @@ public class MainMenuArchive : MonoBehaviour, ILocalizationController
     public void EnableArchivePanel()
     {
         archivePanel.SetActive(true);
-        isOpen = true;
+        isOpenArchivePanel = true;
         ReadSavedFileData();
+    }
+    public void EnableSetPanel()
+    {
+        setPanel.SetActive(true);
+        isOpenSetPanel = true;
     }
     public void RigisterFile(string id)
     {
@@ -86,7 +105,12 @@ public class MainMenuArchive : MonoBehaviour, ILocalizationController
     public void DisableArchivePanel()
     {
         archivePanel.SetActive(false);
-        isOpen = false;
+        isOpenArchivePanel = false;
+    }
+    public void DisableSetPanel()
+    {
+        setPanel.SetActive(false);
+        isOpenSetPanel = false;
     }
     void ReadSavedFileData()
     {
@@ -102,6 +126,16 @@ public class MainMenuArchive : MonoBehaviour, ILocalizationController
                 newData.SetUpDataInfo(item.fileName, item.createTime);
             }
         }
+    }
+    void LoadLanguage()
+    {
+        languageDropdown.ClearOptions();
+        List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
+        foreach (var item in LocalizationManager.Instance.GetLanguageOptions())
+        {
+            options.Add(new Dropdown.OptionData(item.Key));
+        }
+        languageDropdown.options = options;
     }
     public void ChangeLanguage()
     {

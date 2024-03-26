@@ -5,23 +5,25 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour, ILocalizationController
 {
+    public SecondaryMenu secondaryMenu;
+    [Header("Main Menu")]
     public Button newGameBtn;
     public Button loadBtn;
+    public Button setBtn;
     public Button exitBtn;
+    [Header("Secondary Menu")]
+    public Text male;
+    public Text female;
+    public Text dog;
     public Button backBtn;
-    public Text m;
-    public Text f;
-    public Text d;
-
-    public MainMenuArchive archive;
-    PlayableDirector director;
 
     [Header("Player Model")]
     public GameObject malePlayerModel;
     public GameObject femalePlayerModel;
     public GameObject dogPlayerModel;
-    GameObject currentPlayerModel;
 
+    PlayableDirector director;
+    GameObject currentPlayerModel;
     GameObject startMenu;
     GameObject selectMenu;
     int playerID;
@@ -29,7 +31,6 @@ public class MainMenu : MonoBehaviour, ILocalizationController
     void Awake()
     {
         director = FindObjectOfType<PlayableDirector>();
-
         startMenu = transform.GetChild(0).gameObject;
         selectMenu = transform.GetChild(1).gameObject;
         startMenu.SetActive(true);
@@ -43,8 +44,9 @@ public class MainMenu : MonoBehaviour, ILocalizationController
     private void OnEnable()
     {
         director.stopped += NewGame;
-        newGameBtn.onClick.AddListener(OnChangePanel);
+        newGameBtn.onClick.AddListener(OnStartNewGame);
         loadBtn.onClick.AddListener(OnLoadGame);
+        setBtn.onClick.AddListener(OnEnableSet);
         exitBtn.onClick.AddListener(OnQuitGame);
         backBtn.onClick.AddListener(OnBack);
         LocalizationManager.Instance.AddLocalizationController(this);
@@ -61,8 +63,9 @@ public class MainMenu : MonoBehaviour, ILocalizationController
     {
         LocalizationManager.Instance.RemoveLocalizationController(this);
         director.stopped -= NewGame;
-        newGameBtn.onClick.RemoveListener(OnChangePanel);
+        newGameBtn.onClick.RemoveListener(OnStartNewGame);
         loadBtn.onClick.RemoveListener(OnLoadGame);
+        setBtn.onClick.RemoveListener(OnEnableSet);
         exitBtn.onClick.RemoveListener(OnQuitGame);
         backBtn.onClick.RemoveListener(OnBack);
     }
@@ -95,20 +98,24 @@ public class MainMenu : MonoBehaviour, ILocalizationController
         PlayerPrefs.DeleteAll();
         SceneController.Instance.LoadNewGame(playerID);
     }
+    void OnEnableSet()
+    {
+        secondaryMenu.EnableSetPanel();
+    }
     void OnBack()
     {
         currentPlayerModel = null;
         startMenu.SetActive(true);
         selectMenu.SetActive(false);
     }
-    void OnChangePanel()
+    void OnStartNewGame()
     {
         startMenu.SetActive(false);
         selectMenu.SetActive(true);
     }
     void OnLoadGame()
     {
-        archive.EnableArchivePanel();
+        secondaryMenu.EnableArchivePanel();
     }
     void OnQuitGame()
     {
@@ -120,12 +127,13 @@ public class MainMenu : MonoBehaviour, ILocalizationController
     #endregion
     public void ChangeLanguage()
     {
-        m.text = LocalizationManager.Instance.GetLocalization("male");
-        f.text = LocalizationManager.Instance.GetLocalization("female");
-        d.text = LocalizationManager.Instance.GetLocalization("secret");
+        male.text = LocalizationManager.Instance.GetLocalization("male");
+        female.text = LocalizationManager.Instance.GetLocalization("female");
+        dog.text = LocalizationManager.Instance.GetLocalization("secret");
         backBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("back");
         newGameBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("start_game");
         loadBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("load_archive");
+        setBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("set");
         exitBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("exit_game");
     }
 }

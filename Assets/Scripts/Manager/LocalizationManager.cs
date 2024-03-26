@@ -10,9 +10,9 @@ public class LocalizationManager : Singleton<LocalizationManager>
     {
         ChineseSimplified,
         English,
+        ChineseTraditional,
+        Other
     }
-    LanguageState languageState = LanguageState.ChineseSimplified;
-    SystemLanguage mainLanguage = SystemLanguage.ChineseSimplified;
     public LanguageState CurrentLanguageState
     {
         get
@@ -28,7 +28,9 @@ public class LocalizationManager : Singleton<LocalizationManager>
             }
         }
     }
-    public Dictionary<SystemLanguage, Dictionary<string, string>> LocalizedDic = new Dictionary<SystemLanguage, Dictionary<string, string>>();
+    LanguageState languageState = LanguageState.ChineseSimplified;
+    Dictionary<LanguageState, Dictionary<string, string>> LocalizedDic = new Dictionary<LanguageState, Dictionary<string, string>>();
+    Dictionary<string, LanguageState> languageOption = new Dictionary<string, LanguageState>();
     List<ILocalizationController> lcList = new List<ILocalizationController>();
     protected override void Awake()
     {
@@ -38,13 +40,6 @@ public class LocalizationManager : Singleton<LocalizationManager>
     private void Start()
     {
         ReadFromFile();
-    }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            CurrentLanguageState = LanguageState.English;
-        }
     }
     public void AddLocalizationController(ILocalizationController lc)
     {
@@ -56,12 +51,6 @@ public class LocalizationManager : Singleton<LocalizationManager>
     }
     void OnLanguageChanged()
     {
-        mainLanguage = languageState switch
-        {
-            LanguageState.ChineseSimplified => SystemLanguage.ChineseSimplified,
-            LanguageState.English => SystemLanguage.English,
-            _ => SystemLanguage.Unknown
-        };
         foreach (var i in lcList)
         {
             i.ChangeLanguage();
@@ -70,6 +59,7 @@ public class LocalizationManager : Singleton<LocalizationManager>
     void ReadFromFile()
     {
         LocalizedDic.Clear();
+        languageOption.Clear();
         string filePath = Application.dataPath + "/Game Data/LocalizationData.xlsx";
         FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateReader(stream);
@@ -79,23 +69,32 @@ public class LocalizationManager : Singleton<LocalizationManager>
         {
             for (int j = 0; j < dataTable.Columns.Count; j++)
             {
-                SetLocalization(GetLanguage(dataTable.Rows[0][j].ToString()), dataTable.Rows[i][0].ToString(), dataTable.Rows[i][j].ToString());
+                SetLocalization(GetLanguageState(dataTable.Rows[0][j].ToString()), dataTable.Rows[i][0].ToString(), dataTable.Rows[i][j].ToString());
             }
+        }
+        for (int i = 1; i < dataTable.Columns.Count; i++)
+        {
+            languageOption.Add(dataTable.Rows[0][i].ToString(), GetLanguageState(dataTable.Rows[0][i].ToString()));
         }
         excelReader.Close();
         stream.Close();
     }
-    SystemLanguage GetLanguage(string flag)
+    public LanguageState GetLanguageState(string flag)
     {
-        SystemLanguage language = flag switch
+        LanguageState language = flag switch
         {
-            "EN" => SystemLanguage.English,
-            "CN" => SystemLanguage.ChineseSimplified,
-            _ => SystemLanguage.Unknown,
+            "简体中文" => LanguageState.ChineseSimplified,
+            "English" => LanguageState.English,
+            "繁體中文" => LanguageState.ChineseTraditional,
+            _ => LanguageState.Other,
         };
         return language;
     }
-    void SetLocalization(SystemLanguage language, string flag, string target)
+    public void SetLanguageState(LanguageState state)
+    {
+        CurrentLanguageState = state;
+    }
+    void SetLocalization(LanguageState language, string flag, string target)
     {
         if (!LocalizedDic.ContainsKey(language))
         {
@@ -108,11 +107,15 @@ public class LocalizationManager : Singleton<LocalizationManager>
     }
     public string GetLocalization(string flag)
     {
-        if (LocalizedDic[mainLanguage].ContainsKey(flag))
+        if (LocalizedDic[languageState].ContainsKey(flag))
         {
-            return LocalizedDic[mainLanguage][flag];
+            return LocalizedDic[languageState][flag];
         }
         Debug.LogError("不存在该文本！");
         return "";
+    }
+    public Dictionary<string, LanguageState> GetLanguageOptions()
+    {
+        return languageOption;
     }
 }

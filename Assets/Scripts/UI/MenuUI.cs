@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,6 +6,7 @@ public class MenuUI : MonoBehaviour, ILocalizationController
 {
     GameObject mainMenu;
     GameObject archiveMenu;
+    GameObject settingMenu;
     GameObject confirmMenu;
     public SaveFileButton SaveButtonPrefab;
     [Header("Main Menu")]
@@ -15,6 +17,8 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     public Button createButton;
     public Button loadButton;
     public Button deleteButton;
+    [Header("Setting Menu")]
+    public Dropdown languageDropdown;
     [Header("Confirm Menu")]
     public InputField fileName;
     public Button confirmButton;
@@ -27,6 +31,7 @@ public class MenuUI : MonoBehaviour, ILocalizationController
         None,
         Main,
         Archive,
+        Setting,
         Confirm,
     }
     EscapeMenuState menu = EscapeMenuState.None;
@@ -36,22 +41,26 @@ public class MenuUI : MonoBehaviour, ILocalizationController
         mainMenu = transform.GetChild(0).gameObject;
         archiveMenu = transform.GetChild(1).gameObject;
         confirmMenu = transform.GetChild(2).gameObject;
+        settingMenu = transform.GetChild(3).gameObject;
         ChangeMenuStates(EscapeMenuState.None);
     }
     private void Start()
     {
+        LoadLanguage();
         ChangeLanguage();
     }
     private void OnEnable()
     {
+        LocalizationManager.Instance.AddLocalizationController(this);
+        languageDropdown.onValueChanged.AddListener(OnDropdownValueChanged);
         confirmButton.onClick.AddListener(OnConfirm);
         cancelButton.onClick.AddListener(OnCancel);
-        archiveButton.onClick.AddListener(OnLoadArchiveMenu);
+        archiveButton.onClick.AddListener(OnOpenArchiveMenu);
+        settingButton.onClick.AddListener(OnOpenSettingMenu);
         createButton.onClick.AddListener(OnCreate);
         loadButton.onClick.AddListener(OnLoad);
         deleteButton.onClick.AddListener(OnDelete);
         exitButton.onClick.AddListener(OnExitGame);
-        LocalizationManager.Instance.AddLocalizationController(this);
     }
     private void Update()
     {
@@ -82,9 +91,11 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     private void OnDisable()
     {
         LocalizationManager.Instance.RemoveLocalizationController(this);
+        languageDropdown.onValueChanged.RemoveListener(OnDropdownValueChanged);
         confirmButton.onClick.RemoveListener(OnConfirm);
         cancelButton.onClick.RemoveListener(OnCancel);
-        archiveButton.onClick.RemoveListener(OnLoadArchiveMenu);
+        archiveButton.onClick.RemoveListener(OnOpenArchiveMenu);
+        settingButton.onClick.RemoveListener(OnOpenSettingMenu);
         createButton.onClick.RemoveListener(OnCreate);
         loadButton.onClick.RemoveListener(OnLoad);
         deleteButton.onClick.RemoveListener(OnDelete);
@@ -92,6 +103,15 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     }
     #endregion
     #region ÏìÓ¦ÊÂ¼þ
+    void OnOpenSettingMenu()
+    {
+        ChangeMenuStates(EscapeMenuState.Setting);
+    }
+    void OnDropdownValueChanged(int index)
+    {
+        var state = LocalizationManager.Instance.GetLanguageState(languageDropdown.options[index].text);
+        LocalizationManager.Instance.SetLanguageState(state);
+    }
     void OnLoad()
     {
         if (currentSelectFile != null)
@@ -116,13 +136,13 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     void OnConfirm()
     {
         SaveManager.Instance.SaveGameData(fileName.text);
-        OnLoadArchiveMenu();
+        OnOpenArchiveMenu();
     }
     void OnCancel()
     {
         ChangeMenuStates(EscapeMenuState.Archive);
     }
-    void OnLoadArchiveMenu()
+    void OnOpenArchiveMenu()
     {
         ChangeMenuStates(EscapeMenuState.Archive);
         ReadSavedFileData();
@@ -139,11 +159,22 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     {
         currentSelectFile = id;
     }
+    void LoadLanguage()
+    {
+        languageDropdown.ClearOptions();
+        List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
+        foreach (var item in LocalizationManager.Instance.GetLanguageOptions())
+        {
+            options.Add(new Dropdown.OptionData(item.Key));
+        }
+        languageDropdown.options = options;
+    }
     void ChangeMenuStates(EscapeMenuState state)
     {
         menu = state;
         mainMenu.SetActive(false);
         archiveMenu.SetActive(false);
+        settingMenu.SetActive(false);
         confirmMenu.SetActive(false);
         currentSelectFile = null;
         switch (state)
@@ -157,6 +188,9 @@ public class MenuUI : MonoBehaviour, ILocalizationController
                 break;
             case EscapeMenuState.Archive:
                 archiveMenu.SetActive(true);
+                break;
+            case EscapeMenuState.Setting:
+                settingMenu.SetActive(true);
                 break;
             case EscapeMenuState.Confirm:
                 confirmMenu.SetActive(true);
@@ -178,10 +212,9 @@ public class MenuUI : MonoBehaviour, ILocalizationController
             }
         }
     }
-
     public void ChangeLanguage()
     {
-        archiveButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("archive");
+        archiveButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("secondaryMenu");
         settingButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("set");
         exitButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("exit_game");
         createButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("create");
