@@ -76,6 +76,7 @@ public class GameManager : Singleton<GameManager>
         string[] resTemp = resolution.Split('x');
         int width = int.Parse(resTemp[0]);
         int height = int.Parse(resTemp[1]);
+        Debug.Log($"{width}+{height}+{fullScreen}");
         Screen.SetResolution(width, height, fullScreen, 60);
     }
 }
