@@ -55,7 +55,7 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     }
     private void OnEnable()
     {
-        LocalizationManager.Instance.AddLocalizationController(this);       
+        LocalizationManager.Instance.AddLocalizationController(this);
         confirmButton.onClick.AddListener(OnConfirm);
         cancelButton.onClick.AddListener(OnCancel);
         archiveButton.onClick.AddListener(OnOpenArchiveMenu);
