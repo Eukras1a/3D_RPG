@@ -178,6 +178,10 @@ public class CharacterStates : MonoBehaviour
                 + defener.gameObject.tag + "µ±Ç°ÑªÁ¿:" + CurrentHealth);
         }
         UpdateHealthUIOnAttack?.Invoke(CurrentHealth, MaxHealth);
+        if (attacker.gameObject.CompareTag("Player"))
+        {
+            FindObjectOfType<FloatText>().CreatFloatTextInUI(damage.ToString(), defener.transform.position + new Vector3(0, 1.8f, 0), attacker.isCritical);
+        }
         if (CurrentHealth <= 0)
         {
             attacker.characterData.UpdateExp(characterData.killPoint);
