@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    [HideInInspector] public CharacterStates playerStates = new CharacterStates();
+    [HideInInspector] public CharacterStates playerStates;
     [HideInInspector] public bool IsStopGame;
 
     CinemachineFreeLook followCamera;
@@ -77,6 +77,6 @@ public class GameManager : Singleton<GameManager>
         int width = int.Parse(resTemp[0]);
         int height = int.Parse(resTemp[1]);
         Debug.Log($"{width}+{height}+{fullScreen}");
-        Screen.SetResolution(width, height, fullScreen, 60);
+        Screen.SetResolution(width, height, FullScreenMode.Windowed);
     }
 }

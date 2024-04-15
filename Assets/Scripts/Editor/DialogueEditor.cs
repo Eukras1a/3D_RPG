@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -22,7 +21,7 @@ public class DialogueEditor : EditorWindow
 {
     DialogueData_SO currentData;
     ReorderableList piecesList = null;
-    Vector2  scrollPostion = Vector2.zero;
+    Vector2 scrollPostion = Vector2.zero;
     Dictionary<string, ReorderableList> optionList = new Dictionary<string, ReorderableList>();
     [MenuItem("Editor/Dialogue Editor")]
     public static void Init()
@@ -68,7 +67,7 @@ public class DialogueEditor : EditorWindow
             EditorGUILayout.LabelField(currentData.name, EditorStyles.boldLabel);
             EditorGUILayout.Space(10);
 
-            scrollPostion = EditorGUILayout.BeginScrollView(scrollPostion,GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
+            scrollPostion = EditorGUILayout.BeginScrollView(scrollPostion, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
             if (piecesList == null)
             {
                 SetUpReorderableList();
@@ -86,7 +85,7 @@ public class DialogueEditor : EditorWindow
                     Directory.CreateDirectory(dataPath);
                 }
                 DialogueData_SO newData = ScriptableObject.CreateInstance<DialogueData_SO>();
-                AssetDatabase.CreateAsset(newData, dataPath+"/"+"New Dialogue.asset");
+                AssetDatabase.CreateAsset(newData, dataPath + "/" + "New Dialogue.asset");
                 currentData = newData;
             }
             EditorGUILayout.LabelField("NO DATA SELECTED!", EditorStyles.boldLabel);
@@ -103,7 +102,6 @@ public class DialogueEditor : EditorWindow
         piecesList.drawElementCallback += OnDrawElement;
         piecesList.elementHeightCallback += OnDrawHeight;
     }
-
     private float OnDrawHeight(int index)
     {
         var height = EditorGUIUtility.singleLineHeight;
@@ -118,7 +116,6 @@ public class DialogueEditor : EditorWindow
         }
         return height;
     }
-
     private void OnDrawElement(Rect rect, int index, bool isActive, bool isFocused)
     {
         EditorUtility.SetDirty(currentData);
@@ -167,7 +164,8 @@ public class DialogueEditor : EditorWindow
                     {
                         var option = new ReorderableList(currentPiece.options, typeof(DialogueOption), true, true, true, true);
                         option.drawHeaderCallback = OnDrawOptionHeader;
-                        option.drawElementCallback = (optionRect,optionIndex,optionActive,optionFocused) => {
+                        option.drawElementCallback = (optionRect, optionIndex, optionActive, optionFocused) =>
+                        {
                             OnDrawOptionElement(currentPiece, optionRect, optionIndex, optionActive, optionFocused);
                         };
                         optionList[optionKey] = option;
@@ -177,33 +175,30 @@ public class DialogueEditor : EditorWindow
             }
         }
     }
-
     private void OnDrawOptionHeader(Rect rect)
     {
-        GUI.Label(rect,"Text");
-        rect.x += rect.width*0.5f+10;
-        GUI.Label(rect,"ID");
+        GUI.Label(rect, "Text");
+        rect.x += (rect.width * 0.5f) + 10;
+        GUI.Label(rect, "ID");
         rect.x += rect.width * 0.3f;
-        GUI.Label(rect,"Apply");
+        GUI.Label(rect, "Apply");
     }
-
     private void OnDrawOptionElement(DialoguePiece currentPiece, Rect optionRect, int optionIndex, bool optionActive, bool optionFocused)
     {
         var currentOption = currentPiece.options[optionIndex];
         var tempRect = optionRect;
 
         tempRect.width = optionRect.width * 0.5f;
-        currentOption.text = EditorGUI.TextField(tempRect,currentOption.text);
+        currentOption.text = EditorGUI.TextField(tempRect, currentOption.text);
 
         tempRect.x += tempRect.width + 5;
         tempRect.width = optionRect.width * 0.3f;
         currentOption.targetID = EditorGUI.TextField(tempRect, currentOption.targetID);
-        
+
         tempRect.x += tempRect.width + 5;
         tempRect.width = optionRect.width * 0.2f;
         currentOption.takeTask = EditorGUI.Toggle(tempRect, currentOption.takeTask);
     }
-
     private void OnDrawPieceHeader(Rect rect)
     {
         GUI.Label(rect, "Dailogue Pieces");

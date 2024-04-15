@@ -32,7 +32,7 @@ public class MouseManager : Singleton<MouseManager>
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (InteractWithUI())
         {
-            Cursor.SetCursor(point, Vector2.zero, CursorMode.Auto);
+            //Cursor.SetCursor(point, Vector2.zero, CursorMode.Auto);
             return;
         }
         if (Physics.Raycast(ray, out hitInfo))
@@ -55,7 +55,9 @@ public class MouseManager : Singleton<MouseManager>
                     Cursor.SetCursor(point, new Vector2(16, 16), CursorMode.Auto);
                     break;
                 default:
-                    Cursor.SetCursor(arrow, new Vector2(16, 16), CursorMode.Auto);
+                    Cursor.SetCursor(arrow, new Vector2(16, 16), CursorMode.ForceSoftware);
+                    Cursor.visible = true;
+                    Cursor.lockState = CursorLockMode.None;
                     break;
             }
         }

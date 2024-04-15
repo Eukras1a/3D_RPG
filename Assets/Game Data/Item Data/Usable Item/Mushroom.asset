@@ -18,6 +18,9 @@ MonoBehaviour:
   itemAmount: 1
   stackable: 1
   itemDescription: HP+10
-  weaponPrefab: {fileID: 0}
-  weaponAttackData: {fileID: 0}
+  equipmentPrefab: {fileID: 0}
+  weaponData: {fileID: 0}
+  shieldData: {fileID: 0}
+  animatorStates: 0
+  overrideController: {fileID: 0}
   usableItemData: {fileID: 11400000, guid: 5f6e26814c16f194d883847c99947872, type: 2}

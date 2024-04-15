@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,23 +12,24 @@ public enum FileDataState
 }
 public class SaveManager : Singleton<SaveManager>
 {
-    string filePath;
     GameFileData gameFileData = new GameFileData();
     string currentSaveFileName;
     int playerID;
     int taskCount;
-    CharacterData_SO data;
+    string filePath;
+    string DataPath
+    {
+        get
+        {
+            return filePath + "/SAVEDATA.DATA";
+        }
+    }
     protected override void Awake()
     {
         base.Awake();
+        filePath = Application.persistentDataPath + "/GameData";
         DontDestroyOnLoad(this);
         LoadFileData();
-        data = ScriptableObject.CreateInstance<CharacterData_SO>();
-#if UNITY_EDITOR
-        filePath = "F:/SaveData/SAVEDATA.SD";
-#else
-        filePath = Path.Combine(Application.persistentDataPath, "SAVEDATA.SD");
-#endif
     }
     #region S/L
     public void Save(UnityEngine.Object data, string key)
@@ -53,28 +55,14 @@ public class SaveManager : Singleton<SaveManager>
             {
                 TaskManager.Instance.SaveTask(currentSaveFileName);
                 InventoryManager.Instance.SaveData(currentSaveFileName);
-                var player = GameManager.Instance.playerStates.characterData;
-                var tempPlayerData = new SavedPlayerInfo()
-                {
-                    characterName = player.characterName,
-                    maxHealth = player.maxHealth,
-                    currentHealth = player.currentHealth,
-                    baseDefence = player.baseDefence,
-                    currentDefence = player.currentDefence,
-                    killPoint = player.killPoint,
-                    currentLevel = player.currentLevel,
-                    maxLevel = player.maxLevel,
-                    currentExp = player.currentExp,
-                    baseExp = player.baseExp,
-                    levelBuff = player.levelBuff,
-                };
+
                 var tempFileData = new FileData()
                 {
                     fileName = currentSaveFileName,
                     createTime = DateTime.Now.ToString(),
                     playerPrefabID = playerID,
                     taskCount = taskCount,
-                    savedPlayerInfo = tempPlayerData,
+                    characterData = GameManager.Instance.playerStates.characterData,
                 };
                 tempFileData.SavePlayerTransformInfo(SceneManager.GetActiveScene().name, GameManager.Instance.playerStates.transform);
                 gameFileData.currentGameFile = tempFileData.fileName;
@@ -98,10 +86,13 @@ public class SaveManager : Singleton<SaveManager>
     {
         DeleteEmptyOrRepeat();
         currentSaveFileName = name;
-        var temp = gameFileData.gameFiles.Find(gf => gf.fileName == name);
+        var temp = GetFile(name);
         TaskManager.Instance.LoadTask(temp.taskCount, name);
         SceneController.Instance.LoadGame(temp.playerPrefabID, temp.playerLocationOnSceneLoad.position, temp.playerLocationOnSceneLoad.rotation, temp.lastScene);
-        CopyData(data, temp);
+    }
+    FileData GetFile(string name)
+    {
+        return gameFileData.gameFiles.Find(gf => gf.fileName == name);
     }
     public void DeleteGameData(string name)
     {
@@ -124,16 +115,19 @@ public class SaveManager : Singleton<SaveManager>
     public void SaveFileData()
     {
         DeleteEmptyOrRepeat();
-        string jsonData = JsonUtility.ToJson(gameFileData, true);
-        File.WriteAllText(filePath, jsonData);
+        var jsonString = JsonConvert.SerializeObject(gameFileData, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+        if (!Directory.Exists(filePath))
+        {
+            Directory.CreateDirectory(filePath);
+        }
+        File.WriteAllText(DataPath, jsonString);
     }
     void LoadFileData()
     {
-        if (File.Exists(filePath))
+        if (File.Exists(DataPath))
         {
-            string data = File.ReadAllText(filePath);
-            JsonUtility.FromJsonOverwrite(data, gameFileData);
-            DeleteEmptyOrRepeat();
+            var filecontents = File.ReadAllText(DataPath);
+            gameFileData = JsonConvert.DeserializeObject<GameFileData>(filecontents);
         }
     }
     #endregion
@@ -172,29 +166,18 @@ public class SaveManager : Singleton<SaveManager>
     }
     #endregion
     #region Get/Set
-    public void CopyData(CharacterData_SO data, FileData temp)
-    {
-        data.characterName = temp.savedPlayerInfo.characterName;
-        data.maxHealth = temp.savedPlayerInfo.maxHealth;
-        data.currentHealth = temp.savedPlayerInfo.currentHealth;
-        data.baseDefence = temp.savedPlayerInfo.baseDefence;
-        data.currentDefence = temp.savedPlayerInfo.currentDefence;
-        data.killPoint = temp.savedPlayerInfo.killPoint;
-        data.currentLevel = temp.savedPlayerInfo.currentLevel;
-        data.maxLevel = temp.savedPlayerInfo.maxLevel;
-        data.currentExp = temp.savedPlayerInfo.currentExp;
-        data.baseExp = temp.savedPlayerInfo.baseExp;
-        data.levelBuff = temp.savedPlayerInfo.levelBuff;
-    }
     public void GetInventoryData()
     {
         InventoryManager.Instance.LoadData(currentSaveFileName);
     }
     public void SetPlayerData()
     {
-        if (SceneController.Instance.IsTrans)
+        if (!SceneController.Instance.IsTrans)
         {
-            GameManager.Instance.SetPlayerData(data);
+            if (currentSaveFileName != null)
+            {
+                GameManager.Instance.SetPlayerData(GetFile(currentSaveFileName).characterData);
+            }
         }
     }
     public void SetTaskCount(int count)

@@ -9,7 +9,7 @@ public class FileData
     public int playerPrefabID;
     public int taskCount;
     public PlayerSceneLocation playerLocationOnSceneLoad;
-    public SavedPlayerInfo savedPlayerInfo;
+    public CharacterData_SO characterData;
     public void SavePlayerTransformInfo(string sceneName, Transform t)
     {
         lastScene = sceneName;
@@ -25,21 +25,4 @@ public class PlayerSceneLocation
 {
     public Vector3 position;
     public Quaternion rotation;
-}
-[System.Serializable]
-public class SavedPlayerInfo
-{
-    public string characterName;
-    public int maxHealth;
-    public int currentHealth;
-    public int baseDefence;
-    public int currentDefence;
-
-    public int killPoint;
-
-    public int currentLevel;
-    public int maxLevel;
-    public int baseExp;
-    public int currentExp;
-    public float levelBuff;
 }
