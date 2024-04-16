@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UI;
 
-public class MainMenu : MonoBehaviour, ILocalizationController
+public class MainMenu : MonoBehaviour
 {
     public SecondaryMenu secondaryMenu;
     [Header("Main Menu")]
@@ -38,10 +38,6 @@ public class MainMenu : MonoBehaviour, ILocalizationController
         selectMenu.SetActive(false);
         HideAllModel();
     }
-    private void Start()
-    {
-        ChangeLanguage();
-    }
     private void OnEnable()
     {
         director.stopped += NewGame;
@@ -50,7 +46,6 @@ public class MainMenu : MonoBehaviour, ILocalizationController
         setBtn.onClick.AddListener(OnEnableSet);
         exitBtn.onClick.AddListener(OnQuitGame);
         backBtn.onClick.AddListener(OnBack);
-        LocalizationManager.Instance.AddLocalizationController(this);
     }
     private void Update()
     {
@@ -69,7 +64,6 @@ public class MainMenu : MonoBehaviour, ILocalizationController
     }
     private void OnDisable()
     {
-        LocalizationManager.Instance.RemoveLocalizationController(this);
         director.stopped -= NewGame;
         newGameBtn.onClick.RemoveListener(OnStartNewGame);
         loadBtn.onClick.RemoveListener(OnLoadGame);
@@ -136,15 +130,4 @@ public class MainMenu : MonoBehaviour, ILocalizationController
         Application.Quit();
     }
     #endregion
-    public void ChangeLanguage()
-    {
-        male.text = LocalizationManager.Instance.GetLocalization("male");
-        female.text = LocalizationManager.Instance.GetLocalization("female");
-        dog.text = LocalizationManager.Instance.GetLocalization("secret");
-        backBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("back");
-        newGameBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("start_game");
-        loadBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("load_archive");
-        setBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("set");
-        exitBtn.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("exit_game");
-    }
 }

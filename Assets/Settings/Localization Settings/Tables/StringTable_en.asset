@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: StringTable_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 090409a16316a9244b6d72e14ab58d4a, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 6415663104
+    m_Localized: "NEW GAME\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58148208640
+    m_Localized: "LOAD GAME\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 275228606464
+    m_Localized: EXIT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 335563669504
+    m_Localized: "LOAD\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 374864297984
+    m_Localized: "DELETE\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 598307454976
+    m_Localized: "NAME\r:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 665164660736
+    m_Localized: "TIME\r:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 956689760256
+    m_Localized: "MALE\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1031356760064
+    m_Localized: "FEMALE\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1097756786688
+    m_Localized: "SECRET\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1178274840576
+    m_Localized: BACK
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1237842345984
+    m_Localized: "ARCHIVE\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1318544949248
+    m_Localized: "SETTINGS\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1399948001280
+    m_Localized: "CONFIRM\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1467539210240
+    m_Localized: "CANCEL\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1514637049856
+    m_Localized: "New Document Name\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1570085748736
+    m_Localized: "FULL SCREEN\r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4385130627072
+    m_Localized: CREATE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5238369501184
+    m_Localized: English
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

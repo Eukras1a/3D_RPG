@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuUI : MonoBehaviour, ILocalizationController
+public class MenuUI : MonoBehaviour
 {
     GameObject mainMenu;
     GameObject archiveMenu;
@@ -18,7 +18,6 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     public Button loadButton;
     public Button deleteButton;
     [Header("Setting Panel")]
-    public Dropdown languageDropdown;
     public Dropdown windowDropdown;
     public Toggle fullScreen;
     public Text fullScreenLabel;
@@ -49,20 +48,16 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     }
     private void Start()
     {
-        LoadLanguage();
         LoadCustomWindow();
-        ChangeLanguage();
     }
     private void OnEnable()
     {
-        LocalizationManager.Instance.AddLocalizationController(this);
         confirmButton.onClick.AddListener(OnConfirm);
         cancelButton.onClick.AddListener(OnCancel);
         archiveButton.onClick.AddListener(OnOpenArchiveMenu);
         settingButton.onClick.AddListener(OnOpenSettingMenu);
         fullScreen.onValueChanged.AddListener(OnFullScreenChanged);
         windowDropdown.onValueChanged.AddListener(OnWindowValueChanged);
-        languageDropdown.onValueChanged.AddListener(OnDropdownValueChanged);
         createButton.onClick.AddListener(OnCreate);
         loadButton.onClick.AddListener(OnLoad);
         deleteButton.onClick.AddListener(OnDelete);
@@ -96,14 +91,12 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     }
     private void OnDisable()
     {
-        LocalizationManager.Instance.RemoveLocalizationController(this);
         confirmButton.onClick.RemoveListener(OnConfirm);
         cancelButton.onClick.RemoveListener(OnCancel);
         archiveButton.onClick.RemoveListener(OnOpenArchiveMenu);
         settingButton.onClick.RemoveListener(OnOpenSettingMenu);
         fullScreen.onValueChanged.RemoveListener(OnFullScreenChanged);
         windowDropdown.onValueChanged.RemoveListener(OnWindowValueChanged);
-        languageDropdown.onValueChanged.RemoveListener(OnDropdownValueChanged);
         createButton.onClick.RemoveListener(OnCreate);
         loadButton.onClick.RemoveListener(OnLoad);
         deleteButton.onClick.RemoveListener(OnDelete);
@@ -114,10 +107,6 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     void OnOpenSettingMenu()
     {
         ChangeMenuStates(EscapeMenuState.Setting);
-    }
-    void OnDropdownValueChanged(int index)
-    {
-        LocalizationManager.Instance.SetLanguageState(LocalizationManager.Instance.GetLanguageState(languageDropdown.options[index].text));
     }
     void OnFullScreenChanged(bool isOn)
     {
@@ -174,16 +163,6 @@ public class MenuUI : MonoBehaviour, ILocalizationController
     {
         currentSelectFile = id;
     }
-    void LoadLanguage()
-    {
-        languageDropdown.ClearOptions();
-        List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
-        foreach (var item in LocalizationManager.Instance.GetLanguageOptions())
-        {
-            options.Add(new Dropdown.OptionData(item.Key));
-        }
-        languageDropdown.options = options;
-    }
     void LoadCustomWindow()
     {
         windowDropdown.ClearOptions();
@@ -236,18 +215,5 @@ public class MenuUI : MonoBehaviour, ILocalizationController
                 newData.SetUpDataInfo(item.fileName, item.createTime);
             }
         }
-    }
-    public void ChangeLanguage()
-    {
-        fullScreenLabel.text = LocalizationManager.Instance.GetLocalization("full_screen");
-        archiveButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("archive");
-        settingButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("set");
-        exitButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("exit_game");
-        createButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("create");
-        loadButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("load");
-        deleteButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("delete");
-        confirmButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("confirm");
-        cancelButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("cancel");
-        fileName.placeholder.GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("get_filename");
     }
 }

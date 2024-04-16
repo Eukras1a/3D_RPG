@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SecondaryMenu : MonoBehaviour, ILocalizationController
+public class SecondaryMenu : MonoBehaviour
 {
     [Header("Archive Panel")]
     public Text createBtn;
@@ -11,7 +11,6 @@ public class SecondaryMenu : MonoBehaviour, ILocalizationController
     public SaveFileButton SaveButtonPrefab;
     public RectTransform dataListTransform;
     [Header("Setting Panel")]
-    public Dropdown languageDropdown;
     public Dropdown windowDropdown;
     public Toggle fullScreen;
     public Text fullScreenLabel;
@@ -33,18 +32,14 @@ public class SecondaryMenu : MonoBehaviour, ILocalizationController
     }
     private void OnEnable()
     {
-        LocalizationManager.Instance.AddLocalizationController(this);
         loadButton.onClick.AddListener(OnLoad);
         deleteButton.onClick.AddListener(OnDelete);
         fullScreen.onValueChanged.AddListener(OnFullScreenChanged);
         windowDropdown.onValueChanged.AddListener(OnWindowValueChanged);
-        languageDropdown.onValueChanged.AddListener(OnLanguageValueChanged);
     }
     private void Start()
     {
-        LoadLanguage();
         LoadCustomWindow();
-        ChangeLanguage();
     }
     private void Update()
     {
@@ -70,19 +65,13 @@ public class SecondaryMenu : MonoBehaviour, ILocalizationController
     }
     private void OnDisable()
     {
-        LocalizationManager.Instance.RemoveLocalizationController(this);
         loadButton.onClick.RemoveListener(OnLoad);
         deleteButton.onClick.RemoveListener(OnDelete);
         fullScreen.onValueChanged.RemoveListener(OnFullScreenChanged);
         windowDropdown.onValueChanged.RemoveListener(OnWindowValueChanged);
-        languageDropdown.onValueChanged.RemoveListener(OnLanguageValueChanged);
     }
     #endregion
     #region ÏìÓ¦ÊÂ¼þ
-    void OnLanguageValueChanged(int index)
-    {
-        LocalizationManager.Instance.SetLanguageState(LocalizationManager.Instance.GetLanguageState(languageDropdown.options[index].text));
-    }
     void OnFullScreenChanged(bool isOn)
     {
         GameManager.Instance.SetCustomWindow(windowDropdown.options[windowDropdown.value].text, isOn);
@@ -148,16 +137,6 @@ public class SecondaryMenu : MonoBehaviour, ILocalizationController
             }
         }
     }
-    void LoadLanguage()
-    {
-        languageDropdown.ClearOptions();
-        List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
-        foreach (var item in LocalizationManager.Instance.GetLanguageOptions())
-        {
-            options.Add(new Dropdown.OptionData(item.Key));
-        }
-        languageDropdown.options = options;
-    }
     void LoadCustomWindow()
     {
         windowDropdown.ClearOptions();
@@ -167,12 +146,5 @@ public class SecondaryMenu : MonoBehaviour, ILocalizationController
             options.Add(new Dropdown.OptionData(item));
         }
         windowDropdown.options = options;
-    }
-    public void ChangeLanguage()
-    {
-        fullScreenLabel.text = LocalizationManager.Instance.GetLocalization("full_screen");
-        createBtn.text = LocalizationManager.Instance.GetLocalization("create");
-        loadButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("load");
-        deleteButton.transform.GetChild(0).GetComponent<Text>().text = LocalizationManager.Instance.GetLocalization("delete");
     }
 }
