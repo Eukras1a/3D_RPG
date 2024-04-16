@@ -1,20 +1,43 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class FloatText : MonoBehaviour
 {
     public GameObject textPrefab;
+    private ObjectPool<TextMeshProUGUI> m_UITextPool;//对象池
     TextStyle defaultStyle = new TextStyle(35f, 35f, 0f, Color.red, HorizontalAlignmentOptions.Geometry, 1f, 0.7f, 0.5f, new Vector3(0f, 3f, 0f), new Vector3(0f, 3f, 0f), new Vector3(0f, -4f, 0f));
+
+    private void Start()
+    {
+        m_UITextPool = new ObjectPool<TextMeshProUGUI>(Creat_UIText, Get_UIText, Release_UIText, Destroy_UIText);
+    }
+    private TextMeshProUGUI Creat_UIText()
+    {
+        GameObject gameObject = Instantiate(textPrefab, transform, false);
+        TextMeshProUGUI text = gameObject.GetComponent<TextMeshProUGUI>();
+        return gameObject.GetComponent<TextMeshProUGUI>();
+    }
+    private void Get_UIText(TextMeshProUGUI text)
+    {
+        text.gameObject.SetActive(true);
+    }
+    private void Release_UIText(TextMeshProUGUI text)
+    {
+        text.gameObject.SetActive(false);
+    }
+    private void Destroy_UIText(TextMeshProUGUI text)
+    {
+        Destroy(text.gameObject);
+    }
     public void CreatFloatTextInUI(string content, Vector3 localPosition, bool isCritical, Transform followTarget = null)
     {
         StartCoroutine(CreatFloatTextCore(defaultStyle, content, isCritical, localPosition, followTarget));
     }
     private IEnumerator CreatFloatTextCore(TextStyle style, string content, bool isCritical, Vector3 localPosition, Transform followTarget)
     {
-        GameObject obj = Instantiate(textPrefab, transform, false);
-        obj.SetActive(true);
-        TMP_Text text = obj.GetComponent<TextMeshProUGUI>();
+        TMP_Text text = m_UITextPool.Get();
         text.horizontalAlignment = style.alignment;
         text.color = style.fontColor;
         text.fontSize = style.fontStartSize;
@@ -76,6 +99,6 @@ public class FloatText : MonoBehaviour
             yield return null;
             currentTime = Time.time - startTime;
         }
-        Destroy(obj);
+        m_UITextPool.Release(text as TextMeshProUGUI);
     }
 }
