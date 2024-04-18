@@ -97,7 +97,6 @@ public class MainMenu : MonoBehaviour
     #region ÏìÓ¦ÊÂ¼þ
     void NewGame(PlayableDirector pd)
     {
-        PlayerPrefs.DeleteAll();
         SceneController.Instance.LoadNewGame(playerID);
     }
     void OnEnableSet()

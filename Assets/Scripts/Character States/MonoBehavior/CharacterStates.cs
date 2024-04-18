@@ -199,7 +199,6 @@ public class CharacterStates : MonoBehaviour
             GameManager.Instance.playerStates.characterData.UpdateExp(characterData.killPoint);
         }
     }
-
     private int CurrentDamage()
     {
         float coreDamage = UnityEngine.Random.Range(attackData.minDamage, attackData.maxDamage);

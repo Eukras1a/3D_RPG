@@ -7,7 +7,6 @@ public class InventoryManager : Singleton<InventoryManager>
         public SlotHolder originalHolder;
         public RectTransform originalParent;
     }
-    //TODO:添加模版
     [Header("Package Data")]
     public PackageData_SO inventoryTemplate;
     public PackageData_SO actionTemplate;

@@ -35,16 +35,19 @@ public class CharacterData_SO : ScriptableObject
             LevelUp();
         }
     }
-    void LevelUp()
+    public void LevelUp()
     {
-        currentLevel = Mathf.Clamp(currentLevel + 1, 0, maxLevel);
-        baseExp += (int)(baseExp * LevelMultiplier);
-        maxHealth += (int)(maxHealth * LevelMultiplier);
-        currentHealth = maxHealth;
-        baseDefence += 2;
-        currentDefence += 2;
-        GameManager.Instance.playerStates.attackData.LevelUp();
-        GameManager.Instance.playerStates.baseAttackData.LevelUp();
-        Debug.Log("LEVEL UP!Level:" + currentLevel);
+        if (currentLevel < maxLevel)
+        {
+            currentLevel = Mathf.Clamp(currentLevel + 1, 0, maxLevel);
+            baseExp += (int)(baseExp * LevelMultiplier);
+            maxHealth = (int)(maxHealth * LevelMultiplier);
+            currentHealth = maxHealth;
+            baseDefence += 2;
+            currentDefence += 2;
+            GameManager.Instance.playerStates.attackData.LevelUp();
+            GameManager.Instance.playerStates.baseAttackData.LevelUp();
+            Debug.Log("LEVEL UP!Level:" + currentLevel);
+        }
     }
 }

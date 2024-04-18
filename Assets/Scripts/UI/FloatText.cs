@@ -6,12 +6,12 @@ using UnityEngine.Pool;
 public class FloatText : MonoBehaviour
 {
     public GameObject textPrefab;
-    private ObjectPool<TextMeshProUGUI> m_UITextPool;//对象池
+    private ObjectPool<TextMeshProUGUI> floatTextPool;
     TextStyle defaultStyle = new TextStyle(35f, 35f, 0f, Color.red, HorizontalAlignmentOptions.Geometry, 1f, 0.7f, 0.5f, new Vector3(0f, 3f, 0f), new Vector3(0f, 3f, 0f), new Vector3(0f, -4f, 0f));
 
     private void Start()
     {
-        m_UITextPool = new ObjectPool<TextMeshProUGUI>(Creat_UIText, Get_UIText, Release_UIText, Destroy_UIText);
+        floatTextPool = new ObjectPool<TextMeshProUGUI>(Creat_UIText, Get_UIText, Release_UIText, Destroy_UIText);
     }
     private TextMeshProUGUI Creat_UIText()
     {
@@ -37,7 +37,7 @@ public class FloatText : MonoBehaviour
     }
     private IEnumerator CreatFloatTextCore(TextStyle style, string content, bool isCritical, Vector3 localPosition, Transform followTarget)
     {
-        TMP_Text text = m_UITextPool.Get();
+        TMP_Text text = floatTextPool.Get();
         text.horizontalAlignment = style.alignment;
         text.color = style.fontColor;
         text.fontSize = style.fontStartSize;
@@ -99,6 +99,6 @@ public class FloatText : MonoBehaviour
             yield return null;
             currentTime = Time.time - startTime;
         }
-        m_UITextPool.Release(text as TextMeshProUGUI);
+        floatTextPool.Release(text as TextMeshProUGUI);
     }
 }

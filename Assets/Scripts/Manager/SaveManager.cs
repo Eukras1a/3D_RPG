@@ -45,6 +45,10 @@ public class SaveManager : Singleton<SaveManager>
             JsonUtility.FromJsonOverwrite(PlayerPrefs.GetString(key), data);
         }
     }
+    public void Delete(string key)
+    {
+        PlayerPrefs.DeleteKey(key);
+    }
     #endregion
     #region Gamedata
     public void UpdateGameData()
@@ -105,6 +109,7 @@ public class SaveManager : Singleton<SaveManager>
             if (gameFileData.gameFiles[i].fileName == name)
             {
                 gameFileData.gameFiles.Remove(gameFileData.gameFiles[i]);
+                Delete(name);
                 break;
             }
         }

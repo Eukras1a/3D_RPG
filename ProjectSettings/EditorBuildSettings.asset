@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/3_Castle.unity
     guid: a81704713ca8e354796e45651f3278da
+  - enabled: 1
+    path: Assets/Scenes/4_Halloween.unity
+    guid: 669716b1cdf60e943962eae184f2693e
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: bf70f08272adf3341af0af6562c9e3ef, type: 2}
     com.unity.localization.settings: {fileID: 11400000, guid: 2405caf7d6d359a4398f2b445fe55c08, type: 2}

@@ -1,13 +1,11 @@
-
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class CheatEditor : EditorWindow
 {
-    [MenuItem("Cheat/Cheat Editor")]
-    
+    [MenuItem("Editor/Cheat Editor")]
+
     public static void Init()
     {
         CheatEditor editorWindow = GetWindow<CheatEditor>("Cheat Editor");
@@ -20,7 +18,7 @@ public class CheatEditor : EditorWindow
         {
             if (GameManager.Instance.IsPlayerInitialized)
             {
-                GUILayout.Label("角色属性");
+                GUILayout.Label("装备");
                 itemKeyList.Clear();
                 foreach (KeyValuePair<string, ItemData_SO> item in ItemStore.itemList)
                 {
@@ -28,10 +26,19 @@ public class CheatEditor : EditorWindow
                 }
                 foreach (var item in itemKeyList)
                 {
-                    if (GUILayout.Button(item))
+                    if (GUILayout.Button(item, GUILayout.Width(120)))
                     {
                         GetItem(ItemStore.itemList[item]);
                     }
+                }
+                GUILayout.Label("属性");
+                if (GUILayout.Button("升级", GUILayout.Width(120)))
+                {
+                    GameManager.Instance.playerStates.characterData.LevelUp();
+                }
+                if (GUILayout.Button("回复", GUILayout.Width(120)))
+                {
+                    GameManager.Instance.playerStates.characterData.currentHealth = GameManager.Instance.playerStates.characterData.maxHealth;
                 }
             }
         }
