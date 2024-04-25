@@ -38,7 +38,7 @@ public class MenuUI : MonoBehaviour
     }
     EscapeMenuState menu = EscapeMenuState.None;
     #region ÖÜÆÚº¯Êý
-    private void Awake()
+     void Awake()
     {
         mainMenu = transform.GetChild(0).gameObject;
         archiveMenu = transform.GetChild(1).gameObject;

@@ -22,6 +22,8 @@ public class MainMenu : MonoBehaviour
     public GameObject femalePlayerModel;
     public GameObject dogPlayerModel;
 
+    public Introduce introduce;
+
     PlayableDirector director;
     GameObject currentPlayerModel;
     GameObject startMenu;
@@ -36,6 +38,7 @@ public class MainMenu : MonoBehaviour
         selectMenu = transform.GetChild(1).gameObject;
         startMenu.SetActive(true);
         selectMenu.SetActive(false);
+        introduce.gameObject.SetActive(false);
         HideAllModel();
     }
     private void OnEnable()
@@ -97,6 +100,12 @@ public class MainMenu : MonoBehaviour
     #region ÏìÓ¦ÊÂ¼þ
     void NewGame(PlayableDirector pd)
     {
+        introduce.gameObject.SetActive(true);
+        introduce.ShowIntroduce();
+    }
+    public void StartGame()
+    {
+        introduce.gameObject.SetActive(false);
         SceneController.Instance.LoadNewGame(playerID);
     }
     void OnEnableSet()

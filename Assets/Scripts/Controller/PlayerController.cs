@@ -91,7 +91,6 @@ public class PlayerController : MonoBehaviour
             agent.destination = attackTarget.transform.position;
             yield return null;
         }
-
         //Attack
         agent.isStopped = true;
         if (lastAttackTime < 0)

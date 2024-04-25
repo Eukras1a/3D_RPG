@@ -34,7 +34,6 @@ public class AttackData_SO : ScriptableObject
         minDamage = data.minDamage;
         maxDamage = data.maxDamage;
     }
-
     public void LevelUp()
     {
         minDamage += 1;

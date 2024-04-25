@@ -18,13 +18,11 @@ public class SecondaryMenu : MonoBehaviour
     string currentSelectFile;
     bool isOpenArchivePanel;
     bool isOpenSetPanel;
-    GameObject archivePanel;
-    GameObject setPanel;
+    public GameObject archivePanel;
+    public GameObject setPanel;
     #region ÖÜÆÚº¯Êý
     private void Awake()
     {
-        archivePanel = transform.GetChild(0).gameObject;
-        setPanel = transform.GetChild(1).gameObject;
         isOpenArchivePanel = false;
         isOpenSetPanel = false;
         archivePanel.SetActive(false);

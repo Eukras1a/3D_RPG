@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55f0fe9728e4eee488a12bcfbdeb4689, type: 3}
+  m_Name: Start
+  m_EditorClassIdentifier: 
+  dialoguePieces:
+  - ID: 01
+    image: {fileID: 0}
+    text: "\u4F60\u7EC8\u4E8E\u6765\u4E86\u52C7\u58EB\uFF01"
+    task: {fileID: 0}
+    canExpand: 0
+    options:
+    - text: "\u8FD9\u662F\u2026\u2026"
+      targetID: 02
+      takeTask: 0
+  - ID: 02
+    image: {fileID: 0}
+    text: "\u8FD9\u662F\u88AB\u4FB5\u88AD\u7684\u6751\u5E84"
+    task: {fileID: 0}
+    canExpand: 0
+    options: []

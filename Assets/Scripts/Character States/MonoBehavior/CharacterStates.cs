@@ -168,14 +168,12 @@ public class CharacterStates : MonoBehaviour
 
         if (attacker.isCritical)
         {
-            Debug.Log("暴击！" + attacker.gameObject.tag + "对" + defener.gameObject.tag + "造成了" + damage + "点伤害！"
-                + defener.gameObject.tag + "当前血量:" + CurrentHealth);
+            Debug.Log($"暴击！{attacker.gameObject.tag}对{defener.gameObject.tag}造成了{damage}点伤害！{defener.gameObject.tag}当前血量：{CurrentHealth}。");
             defener.GetComponent<Animator>().SetTrigger("Hit");
         }
         else
         {
-            Debug.Log(attacker.gameObject.tag + "对" + defener.gameObject.tag + "造成了" + damage + "点伤害！"
-                + defener.gameObject.tag + "当前血量:" + CurrentHealth);
+            Debug.Log($"{attacker.gameObject.tag}对{defener.gameObject.tag}造成了{damage}点伤害！{defener.gameObject.tag}当前血量：{CurrentHealth}。");
         }
         UpdateHealthUIOnAttack?.Invoke(CurrentHealth, MaxHealth);
         if (attacker.gameObject.CompareTag("Player"))

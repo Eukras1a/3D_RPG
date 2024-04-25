@@ -123,16 +123,16 @@ public class SaveManager : Singleton<SaveManager>
         var jsonString = JsonConvert.SerializeObject(gameFileData, Formatting.Indented, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
         if (!Directory.Exists(filePath))
         {
-            Directory.CreateDirectory(filePath);
+            Directory.CreateDirectory(filePath);//检查路径是否存在，不存在则创建
         }
-        File.WriteAllText(DataPath, jsonString);
+        File.WriteAllText(DataPath, jsonString);//写入文件
     }
     void LoadFileData()
     {
         if (File.Exists(DataPath))
         {
-            var filecontents = File.ReadAllText(DataPath);
-            gameFileData = JsonConvert.DeserializeObject<GameFileData>(filecontents);
+            var filecontents = File.ReadAllText(DataPath);//读取文件
+            gameFileData = JsonConvert.DeserializeObject<GameFileData>(filecontents);//转录成对应格式数据
         }
     }
     #endregion
