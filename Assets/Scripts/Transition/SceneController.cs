@@ -39,6 +39,7 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
             deadWait -= Time.deltaTime;
         }
     }
+
     void SelectPlayerMode(int id)
     {
         GameObject go = id switch
@@ -70,7 +71,7 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
     IEnumerator Transition(string sceneName, TransitionDestination.DestinationTag destinationTag)
     {
         SceneFader fade = Instantiate(sceneFaderPrefab);
-        
+
         if (SceneManager.GetActiveScene().name != sceneName)
         {
             SaveManager.Instance.SaveGameData(saveKey);
@@ -127,8 +128,7 @@ public class SceneController : Singleton<SceneController>, IEndGameObserver
     {
         SelectPlayerMode(id);
         SaveManager.Instance.RigisterPlayerID(id);
-        //TODO:这里是初始场景修改
-        StartCoroutine(LoadScene("2_Village", Vector3.zero, Quaternion.identity));
+        StartCoroutine(LoadScene(GameObject.FindObjectOfType<Develop>().GetTargetScene(), Vector3.zero, Quaternion.identity));
     }
     public void LoadGame(int id, Vector3 position, Quaternion rotation, string scene)
     {
